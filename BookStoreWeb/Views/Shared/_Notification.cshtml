@@ -1,0 +1,15 @@
+﻿@if (TempData["successMessage"] != null)
+{
+    <script>
+        toastr.options.timeOut = 1500;
+        toastr.success('@TempData["successMessage"]');
+    </script>
+}
+
+@if (TempData["errorMessage"] != null)
+{
+    <script>
+        toastr.options.timeOut = 1500;
+        toastr.error('@TempData["errorMessage"]');
+    </script>
+}

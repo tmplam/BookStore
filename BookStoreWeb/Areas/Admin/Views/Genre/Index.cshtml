@@ -1,0 +1,241 @@
+﻿@model List<Genre>
+
+@{
+    ViewData["Title"] = "Manage genres";
+}
+
+<div class="row g-3">
+    <div class="col-xl-12 col-md-12">
+        <div class="card shadow">
+            <div class="bg-body-dark card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 text-nowrap">
+                    <i class="fa-solid fa-bookmark"></i> GENRES
+                </h4>
+                <div class="w-100 d-flex justify-content-end">
+                    <button href="/admin/products/create"
+                            class="btn btn-primary fw-semibold text-uppercase"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createModal">
+                        <i class="fa-solid fa-circle-plus me-1"></i>
+                        NEW GENRE
+                    </button>
+                </div>
+            </div>
+            <div class="bg-body-tertiary card-body px-3 py-2">
+                <div class="datatable-area scroll-container overflow-auto">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Number of books</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Number of books</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i++)
+                            {
+                                var genre = Model[i];
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@genre.Name</td>
+                                    <td>@genre.Products!.Count</td>
+                                    <td>
+                                        <div class="text-nowrap text-center">
+                                            <button class="btn btn-primary py-1"
+                                                    href="/admin/genres/genreId/edit"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#updateModal"
+                                                    data-bs-id="@genre.Id"
+                                                    data-bs-name="@genre.Name">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+
+                                            <button class="btn btn-danger py-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    data-bs-id="@genre.Id">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Delete modal *@
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="delete-genre-form" class="modal-content" method="post">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The genre will be deleted permanently and books of this genre will be
+                set genre to none!
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary btn-cancel"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="submit"
+                        id="delete-genre-btn"
+                        type="button"
+                        class="btn btn-danger">
+                    Delete
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Create modal *@
+<div class="modal fade"
+     id="createModal"
+     tabindex="-1"
+     aria-labelledby="createModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Admin" asp-controller="Genre" asp-action="Create" id="create-genre-form" class="modal-content" method="post">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createModalLabel">CREATE NEW GENRE</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input type="text"
+                           required
+                           class="form-control"
+                           id="genre-name-create"
+                           name="name" />
+                    <label for="genre-name-create">Genre name</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="submit"
+                        id="create-genre-btn"
+                        type="button"
+                        class="btn btn-primary">
+                    Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Update modal *@
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-area="Admin" asp-controller="Genre" asp-action="Update" id="update-genre-form" class="modal-content" method="post">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModalLabel">UPDATE GENRE</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input id="genre-id-update" name="id" hidden />
+                <div class="form-floating">
+                    <input required
+                           type="text"
+                           class="form-control"
+                           id="genre-name-update"
+                           name="name" />
+                    <label for="genre-name-update">Genre name</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="submit"
+                        id="update-genre-btn"
+                        type="button"
+                        class="btn btn-primary">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts 
+{
+    <script>
+        $(() => {
+            @* Data table *@
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+
+            @* Delete product modal *@
+            const deleteModal = $('#deleteModal');
+            const deleteBtn = $('#delete-genre-btn');
+            let deleteGenreId;
+            if (deleteModal) {
+                deleteModal.on('show.bs.modal', (event) => {
+                    const button = $(event.relatedTarget);
+                    deleteGenreId = button.attr('data-bs-id');
+                });
+            }
+
+            const deleteForm = $('#delete-genre-form');
+            deleteBtn.click(function () {
+                deleteForm.attr('action', `/admin/genre/delete/${deleteGenreId}`);
+            });
+
+            @* Update genre modal *@
+            const updateModal = $('#updateModal');
+            const updateBtn = $('#update-genre-btn');
+            let updateGenreId;
+            let updateGenreName;
+            if (updateModal) {
+                updateModal.on('show.bs.modal', (event) => {
+                    const button = $(event.relatedTarget);
+                    updateGenreId = button.attr('data-bs-id');
+                    updateGenreName = button.attr('data-bs-name');
+                    $('#update-genre-form #genre-id-update').val(updateGenreId);
+                    $('#update-genre-form #genre-name-update').val(updateGenreName);
+                });
+            }
+
+            @*const updateForm = $('#update-genre-form');
+            updateBtn.click(function () {
+                updateForm.attr('action', `/admin/genres/update/${updateGenreId}`);
+            });*@
+        });
+    </script>
+}

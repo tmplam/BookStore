@@ -1,0 +1,53 @@
+﻿<div
+    class="flex-column flex-shrink-0 bg-body-tertiary p-3 position-fixed vh-100"
+    style="width: 280px; z-index: 1"
+    id="sidebar"
+>
+    <div class="d-flex align-items-center">
+        <a
+            href="#"
+            class="d-flex align-items-center me-auto link-body-emphasis text-decoration-none text-nowrap"
+        >
+            <img class="me-2" style="width: 38px" src="~/favicon.png" alt="Book icon" />
+            <span style="font-size: 24px" class="me-auto">Bookstore</span>
+        </a>
+        <button id="close-sidebar-btn" type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+    <hr class="mb-3" style="margin-top: 10px" />
+    <ul id="sidebar-nav" class="nav nav-pills flex-column mb-auto">
+        <li>
+            <a
+                href="/admin/dashboard"
+                @* class="nav-link <%= typeof dashboard !== 'undefined' && dashboard ? 'active' : 'link-body-emphasis' %> text-nowrap" *@
+                class="nav-link active text-nowrap"
+            >
+                <span class="me-2"><i class="fa-solid fa-gauge-high" aria-current="page"></i></span>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a class="nav-link link-body-emphasis text-nowrap" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                <span class="me-2"><i class="fa-solid fa-table"></i></span>
+                Orders
+            </a>
+        </li>
+        <li>
+            <a class="nav-link link-body-emphasis text-nowrap" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                <span class="me-2"><i class="fa-solid fa-tags"></i></span>
+                Products
+            </a>
+        </li>
+        <li>
+            <a class="nav-link link-body-emphasis text-nowrap" asp-area="Admin" asp-controller="Genre" asp-action="Index">
+                <span class="me-2"><i class="fa-solid fa-bookmark"></i></span>
+                Genres
+            </a>
+        </li>
+        <li>
+            <a class="nav-link link-body-emphasis text-nowrap" asp-area="Admin" asp-controller="Customer" asp-action="Index">
+                <span class="me-2"><i class="fa-solid fa-user"></i></i></span>
+                Customers
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,21 @@
+﻿/* Style for header and sidebar */
+@media screen and (min-width: 900px) {
+    #sidebar:not(.hide) ~ #content {
+        padding-left: 280px;
+    }
+}
+
+#sidebar.hide {
+    transform: translateX(-280px);
+}
+
+#sidebar,
+#content {
+    transition: 0.5s;
+}
+
+@media screen and (min-width: 900px) {
+    #close-sidebar-btn {
+        display: none;
+    }
+}
