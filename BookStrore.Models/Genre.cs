@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookStoreWeb.Models
+namespace BookStrore.Models
 {
-	public class Genre
-	{
+    public class Genre
+    {
         public Guid Id { get; set; }
 
         [Required]
