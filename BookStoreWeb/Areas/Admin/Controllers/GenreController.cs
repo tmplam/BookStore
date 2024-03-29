@@ -1,23 +1,22 @@
-﻿using BookStore.DataAccess.Data;
+﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class GenreController : Controller
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly IUnitOfWork unitOfWork;
 
-        public GenreController(ApplicationDbContext dbContext)
+        public GenreController(IUnitOfWork unitOfWork)
         {
-            this.dbContext = dbContext;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index()
         {
-            List<Genre> genres = await dbContext.Genres.Include(genre => genre.Products).ToListAsync();
+            IEnumerable<Genre> genres = await unitOfWork.Genre.GetAllAsync(includeProperties: "Products");
             return View(genres);
         }
 
@@ -26,8 +25,8 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await dbContext.Genres.AddAsync(genre);
-                await dbContext.SaveChangesAsync();
+                await unitOfWork.Genre.AddAsync(genre);
+                await unitOfWork.SaveChangesAsync();
                 TempData["successMessage"] = "Create genre successfully!";
             }
             else
@@ -42,8 +41,8 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                dbContext.Genres.Update(genre);
-                await dbContext.SaveChangesAsync();
+                unitOfWork.Genre.Update(genre);
+                await unitOfWork.SaveChangesAsync();
                 TempData["successMessage"] = "Update genre successfully!";
             }
             else
@@ -58,13 +57,13 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingGenre = dbContext.Genres.Include(genre => genre.Products).FirstOrDefault(genre => genre.Id == id);
+                var existingGenre = await unitOfWork.Genre.GetAsync(genre => genre.Id == id, includeProperties: "Products");
                 if (existingGenre != null)
                 {
                     if (existingGenre.Products?.Count == 0)
                     {
-                        dbContext.Genres.Remove(existingGenre);
-                        await dbContext.SaveChangesAsync();
+                        unitOfWork.Genre.Remove(existingGenre);
+                        await unitOfWork.SaveChangesAsync();
                         TempData["successMessage"] = "Delete genre successfully!";
                     }
                     else
