@@ -1,4 +1,5 @@
-﻿@media screen and (min-width: 900px) {
+﻿/* Css for header and sidebar */
+@media screen and (min-width: 900px) {
     #close-sidebar-btn {
         display: none;
     }
@@ -17,4 +18,21 @@
 #sidebar,
 #content {
     transition: 0.5s;
+}
+
+/* Css for ellipsis */
+.one-line-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+.two-line-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines to show */
+    -webkit-box-orient: vertical;
 }

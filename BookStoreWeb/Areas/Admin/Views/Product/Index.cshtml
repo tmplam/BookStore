@@ -1,0 +1,149 @@
+﻿@model List<Product>
+
+@{
+	ViewData["Title"] = "Manage products";
+}
+
+<div class="row g-3">
+    <div class="col-xl-12 col-md-12">
+        <div class="card shadow">
+            <div class="bg-body-dark card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 text-nowrap">
+                    <i class="fa-solid fa-book"></i> BOOKS
+                </h4>
+                <div class="w-100 d-flex justify-content-end">
+                    <a asp-area="Admin" asp-controller="Product" asp-action="Create"
+                       class="btn btn-primary fw-semibold text-uppercase">
+                        <i class="fa-solid fa-circle-plus me-1"></i>
+                        NEW BOOK
+                    </a>
+                </div>
+            </div>
+            <div class="card-body px-3 py-2">
+                <div class="datatable-area scroll-container overflow-auto">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap"># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Author</th>
+                                <th>Genre</th>
+                                <th>Stock&nbsp;&nbsp;</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i++) {
+                                var product = Model[i];
+
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <span class="two-line-ellipsis" title="@product.Title">
+                                            @product.Title
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="one-line-ellipsis" title="@product.Author">
+                                            @product.Author
+                                        </span>
+                                    </td>
+                                    <td>@product.Genre!.Name</td>
+                                    <td>@product.Stock</td>
+                                    <td>$@product.Price</td>
+                                    <td>
+                                        <div class="text-nowrap">
+                                            <a class="btn btn-primary py-1" asp-area="Admin" asp-controller="Product" 
+                                               asp-action="Update" asp-route-id="@product.Id">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            <button class="btn btn-danger py-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    data-bs-id="@product.Id">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">The product will be deleted permanently!</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="delete-book-btn" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Delete form *@
+<form id="delete-book-form" class="visually-hidden" method="POST"></form>
+
+@section Scripts {
+    <script>
+        $(() => {
+            // Data table
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+
+            // Delete product modal
+            const deleteModal = $('#deleteModal');
+            const deleteBtn = $('#delete-book-btn');
+            let bookId;
+            if (deleteModal) {
+                deleteModal.on('show.bs.modal', (event) => {
+                    const button = $(event.relatedTarget);
+                    bookId = button.attr('data-bs-id');
+                });
+            }
+
+            const deleteForm = $('#delete-book-form');
+            deleteBtn.click(function () {
+                deleteForm.attr('action', `/admin/product/delete/${bookId}`);
+
+                deleteForm.submit();
+            });
+        });
+    </script>
+}

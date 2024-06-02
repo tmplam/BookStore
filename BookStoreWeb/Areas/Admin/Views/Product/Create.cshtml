@@ -1,0 +1,146 @@
+﻿@model ProductVM
+
+@{
+    ViewData["Title"] = "Create product";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="text-bg-primary card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                <h2 class="m-0 text-nowrap">
+                    <i class="fa-solid fa-circle-plus"></i> CREATE NEW BOOK
+                </h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="datatable-area">
+                    <form method="post"
+                          class="row g-3"
+                          id="add-product"
+                          enctype="multipart/form-data">
+                        <div class="col-md-6 col-lg-4 control-group">
+                            <label asp-for="Product.ISBN" class="form-label"></label>
+                            <input asp-for="Product.ISBN" class="form-control" />
+                            <span asp-validation-for="Product.ISBN" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Product.Title" class="form-label"></label>
+                            <input asp-for="Product.Title" class="form-control" />
+                            <span asp-validation-for="Product.Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Product.Author" class="form-label"></label>
+                            <input asp-for="Product.Author" class="form-control" />
+                            <span asp-validation-for="Product.Author" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Product.GenreId" class="form-label"></label>
+                            <select asp-for="Product.GenreId" class="form-select" asp-items="@Model.GenreList">
+                                <option disabled selected>--Select Genre--</option>
+                            </select>
+                            <span asp-validation-for="Product.GenreId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Product.Price" class="form-label"></label>
+                            <input asp-for="Product.Price" class="form-control" />
+                            <span asp-validation-for="Product.Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Product.Stock" class="form-label"></label>
+                            <input asp-for="Product.Stock" class="form-control" />
+                            <span asp-validation-for="Product.Stock" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Product.Description" class="form-label"></label>
+                            <textarea asp-for="Product.Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Product.Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-6">
+                            <label for="front-cover" class="form-label">
+                                Front cover
+                            </label>
+                            <input type="file"
+                                   required
+                                   class="form-control"
+                                   id="front-cover"
+                                   name="frontCover"
+                                   accept="image/*" />
+                        </div>
+                        <div class="col-6">
+                            <label for="back-cover" class="form-label">
+                                Back cover
+                            </label>
+                            <input type="file"
+                                   required
+                                   class="form-control"
+                                   id="back-cover"
+                                   name="backCover"
+                                   accept="image/*" />
+                        </div>
+                        <div class="col-6">
+                            <div id="preview-front-cover"
+                                 class="text-center"></div>
+                        </div>
+                        <div class="col-6">
+                            <div id="preview-back-cover"
+                                 class="text-center"></div>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="submit"
+                                    class="btn btn-primary px-5 py-2 fw-semibold">
+                                CREATE
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        $(() => {
+            $('#front-cover').change(function (event) {
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const imagePreview = $('#preview-front-cover');
+                        imagePreview.html(`
+                            <img class="shadow d-inline-block img-thumbnail"
+                                style="width: 60%; aspect-ratio: 4/5; object-fit: cover;"
+                                src="${e.target.result}" />
+                        `);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('#back-cover').change(function (event) {
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const imagePreview = $('#preview-back-cover');
+                        imagePreview.html(`
+                            <img class="shadow d-inline-block img-thumbnail"
+                                style="width: 60%; aspect-ratio: 4/5; object-fit: cover;"
+                                src="${e.target.result}" />
+                        `);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+}

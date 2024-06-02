@@ -15,7 +15,7 @@ namespace BookStore.DataAccess.Repository
 
         public void Update(Genre genre)
         {
-            dbContext.Update(genre);
+            dbContext.Genres.Update(genre);
         }
     }
 }
