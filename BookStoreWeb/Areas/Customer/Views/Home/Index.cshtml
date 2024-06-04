@@ -1,0 +1,197 @@
+﻿@model HomeVM
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<main>
+    <div class="py-2 bg-body-secondary">
+        <form id="search-form" class="container d-flex flex-wrap align-items-center py-3">
+            <div class="col-12 col-sm-auto mb-2 mb-sm-0 me-sm-auto" role="search">
+                <input
+                    type="search"
+                    name="keyword"
+                    class="form-control"
+                    placeholder="Search..."
+                    aria-label="Search"
+                    value="@Model.Keyword"
+                />
+            </div>
+
+            <div class="d-flex align-items-center">
+                <select class="form-select" asp-for="@Model.Genre" name="genre" id="genre" asp-items="@Model.GenreList">
+                    <option value="all">All</option>
+                </select>
+            </div>
+        </form>
+
+        <div class="container">
+            <div
+                class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3"
+            >
+                @foreach(var product in Model.ProductList)
+                {
+                    <div class="col">
+                        <a
+                            asp-area="Customer" asp-controller="Home" asp-action="Detail" asp-route-id="@product.Id"
+                            class="card border-0 p-2 shadow border-top border-5 border-secondary rounded text-decoration-none"
+                            title="View detail"
+                        >
+                            <img
+                                src="/@product.FrontCover"
+                                class="card-img-top rounded"
+                                style="aspect-ratio: 9 / 10"
+                            />
+
+                            <div class="card-body p-1 pb-1">
+                                <div class="">
+                                    <p class="card-title h5 text-body-emphasis opacity-75 text-uppercase text-center text-truncate"
+                                       title="@product.Title">
+                                        @product.Title
+                                    </p>
+                                    <p
+                                        class="card-title text-success text-uppercase text-center text-truncate"
+                                        title="@product.Author"
+                                    >
+                                        <b>Author:</b> @product.Author
+                                    </p>
+                                </div>
+                                <p class="card-text mb-2 line-clamp">@product.Description</p>
+                                <div class="d-flex justify-content-end align-items-center fs-6">
+                                    <p class="mb-0">
+                                        <b class="text-success">Price:</b> $@product.Price
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <nav class="mt-4 d-flex justify-content-end">
+                <ul class="pagination">
+                    <li class="page-item first">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <i class="fa-solid fa-angles-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item prev" style="color: black !important">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item next">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item last">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <i class="fa-solid fa-angles-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+@section Scripts 
+{
+    <script>
+        $(() => {
+            // Search and filter
+            $('#genre').change((e) => {
+                $('#search-form').submit();
+            });
+
+            // Make pagination
+            var page = @Model.Page;
+            var totalPage = @Model.TotalPage;
+            var paginationString = ``;
+            var paginationArray = paginationRange(page, totalPage, 1);
+
+            for (var i of paginationArray) {
+                paginationString = paginationString +
+                    `<li class="page-item ${page == i ? 'active' : ''} ${i == '...' ? 'dots' : ''}">
+                        <a page-value="${i}" class="page-link" href="#">${i}</a>
+                    </li>`
+            }
+
+            $('li.page-item.prev').after(paginationString);
+
+            // Pagination logic
+            $('.page-item:not(.prev):not(.next):not(.active):not(.first):not(.last):not(.dots)').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.delete('page')
+                currentUrl.searchParams.set('page', $(e.target).attr('page-value'));
+
+                window.location.href = currentUrl.toString();
+            })
+
+            $('.page-item.active').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+            })
+
+            $('.page-item.dots').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+            })
+
+            $('.page-item.prev').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentPage = @Model.Page;
+                if (currentPage !== 1) {
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('page')
+                    currentUrl.searchParams.set('page', currentPage - 1);
+                    window.location.href = currentUrl.toString();
+                }
+            })
+
+            $('.page-item.next').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentPage = @Model.Page;
+                const totalPage = @Model.TotalPage;
+                if (currentPage !== totalPage) {
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('page')
+                    currentUrl.searchParams.set('page', currentPage + 1);
+                    window.location.href = currentUrl.toString();
+                }
+            })
+
+            $('.page-item.first').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentPage = @Model.Page;
+                if (currentPage !== 1) {
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('page')
+                    currentUrl.searchParams.set('page', 1);
+                    window.location.href = currentUrl.toString();
+                }
+            })
+
+            $('.page-item.last').click(e => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentPage = @Model.Page;
+                const totalPage = @Model.TotalPage;
+
+                if (currentPage !== totalPage) {
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.delete('page')
+                    currentUrl.searchParams.set('page', totalPage);
+                    window.location.href = currentUrl.toString();
+                }
+            })
+        });
+    </script>
+}

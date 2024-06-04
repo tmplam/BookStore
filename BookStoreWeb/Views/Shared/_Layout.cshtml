@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="@darkMode">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

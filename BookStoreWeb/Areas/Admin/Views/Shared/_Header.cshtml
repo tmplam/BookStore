@@ -1,4 +1,8 @@
-﻿<header class="p-3 border-bottom">
+﻿@{
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+}
+
+<header class="p-3 border-bottom">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center">
             <span
@@ -10,9 +14,16 @@
             </span>
 
             <div class="form-check form-switch mb-0 me-4">
-                <input class="form-check-input" type="checkbox" role="switch" id="darkMode" />
+                <input class="form-check-input" type="checkbox" role="switch" id="darkMode" @(darkMode == ThemeSettings.DarkMode ? "checked" : "") />
                 <label class="form-check-label" for="darkMode">
-                    <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
+                    @if (darkMode == ThemeSettings.DarkMode)
+                    {
+                        <i id="dark-mode-icon" class="fa-solid fa-moon fa-lg"></i>
+                    }
+                    else
+                    {
+                        <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
+                    }
                 </label>
             </div>
             <div class="dropdown text-end">

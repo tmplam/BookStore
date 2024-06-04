@@ -1,25 +1,4 @@
 // Header
-$('#darkMode').change(async (e) => {
-    const darkMode = $('#darkMode').is(':checked');
-    const response = await fetch('/utils/dark-mode', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ darkMode }),
-    });
-    const result = await response.json();
-    if (result.success) {
-        if (darkMode) {
-            $('html').attr('data-bs-theme', 'dark');
-            $('#dark-mode-icon').removeClass('fa-sun').addClass('fa-moon');
-        } else {
-            $('html').attr('data-bs-theme', 'light');
-            $('#dark-mode-icon').removeClass('fa-moon').addClass('fa-sun');
-        }
-    }
-});
-
 $(() => {
     $('#toggle-btn').click(() => {
         $('#sidebar').toggleClass('hide');

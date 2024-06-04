@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Customer\Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BookStore.DataAccess\BookStore.DataAccess.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,258 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Product detail";
+}
+
+@* Split from Detail.cshtml.css because these elements are added by javascript *@
+<style>
+    #more-btn:hover,
+    #less-btn:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+</style>
+
+<main>
+    <div class="py-2 bg-body-secondary">
+        <div class="container">
+            <div class="card shadow border-0 my-3">
+                <div class="card-header text-bg-dark py-3">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h4 class="text-white text-uppercase">@Model.Title</h4>
+                            <p class="text-white-50 fw-semibold mb-0">
+                                by @Model.Author
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container p-2">
+                        <div class="row g-0">
+                            <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                                <div id="myCarousel"
+                                     class="carousel slide"
+                                     data-bs-ride="carousel">
+                                    <ol class="carousel-indicators list-unstyled">
+                                        <li data-bs-target="#myCarousel"
+                                            data-bs-slide-to="0"
+                                            class="active"></li>
+                                        <li data-bs-target="#myCarousel"
+                                            data-bs-slide-to="1"></li>
+                                    </ol>
+
+                                    <div class="carousel-inner h-0"
+                                         style="padding-bottom: 125%">
+                                        <div class="carousel-item position-absolute active">
+                                            <img class="d-block w-100 h-100"
+                                                 src="/@Model.FrontCover"
+                                                 alt="First slide" />
+                                        </div>
+                                        <div class="carousel-item position-absolute">
+                                            <img class="d-block w-100 h-100"
+                                                 src="/@Model.BackCover"
+                                                 alt="Second slide" />
+                                        </div>
+                                    </div>
+
+                                    <a class="carousel-control-prev"
+                                       href="#myCarousel"
+                                       role="button"
+                                       data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+
+                                    <a class="carousel-control-next"
+                                       href="#myCarousel"
+                                       role="button"
+                                       data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-6 offset-lg-1">
+                                <div class="col-12 col-md-6 pb-4">
+                                    <span class="badge rounded-pill bg-warning px-3 py-2">
+                                        @Model.Genre.Name
+                                    </span>
+                                </div>
+                                <div class="row">
+                                    <p class="text-body-emphasis mb-0">
+                                        <span class="fw-bold">ISBN:</span>
+                                        <span class="text-secondary">@Model.ISBN</span>
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <h6 class="text-body-emphasis pb-2">
+                                        <span class="fw-bold">Price:</span>
+                                        <span class="text-success">
+                                            $@Model.Price
+                                        </span>
+                                    </h6>
+                                </div>
+
+                                <div class="row my-3">
+                                    <p id="description"
+                                       class="text-secondary"
+                                       style="text-align: justify"></p>
+                                </div>
+
+                                <form id="add-to-cart-form" action="" method="post">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="text-body-emphasis">Quantity:</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4">
+                                        <div class="col-lg-4 col-md-6 mb-lg-0">
+                                            <div class="d-flex w-100 input-group">
+                                                <span class="btn btn-outline-success px-3 input-group-text"
+                                                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                    <i class="fas fa-minus"></i>
+                                                </span>
+
+                                                <input min="@(Model.Stock > 0 ? 1 : 0)"
+                                                       max="@Model.Stock"
+                                                       class="form-control text-center border-success border-start-0"
+                                                       name="quantity"
+                                                       value="@(Model.Stock > 0 ? 1 : 0)"
+                                                       type="number"
+                                                       id="input-quantity" />
+
+                                                <span class="btn btn-outline-success px-3 input-group-text"
+                                                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                    <i class="fas fa-plus"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6">
+                                            <h6 class="text-body-emphasis mb-0"
+                                                style="line-height: 32px">
+                                                In stock:
+                                                <span class="text-danger fs-3">@Model.Stock</span>
+                                            </h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12 col-lg-5 pb-1">
+                                            <button class="btn bg-warning text-light form-control bg-gradient py-2 text-uppercase fw-semibold">
+                                                <span class="me-1">Add to Cart</span>
+                                                <i class="fa-solid fa-cart-shopping"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts 
+{
+    <script>
+        $(() => {
+            // Handle read more / less
+            let content = `@Model.Description`;
+            const contentArray = content.split(/\s+/);
+
+            if (contentArray.length > 100) {
+                const showContent = contentArray.splice(0, 100);
+                const hideContent = contentArray;
+
+                $('#description').html(`  
+                    ${showContent.join(' ')}
+                    <span id="dots">...
+                        <span id="more-btn" class="fw-bold text-nowrap">
+                            Read more
+                        </span>
+                    </span>
+                    <span id="more-content" class="d-none">
+                        ${hideContent.join(' ')}
+                    </span>
+                    <span id="less-btn" class="fw-bold text-nowrap d-none">
+                            Read less
+                    </span>
+                `);
+
+                $('#more-btn').click(function () {
+                    $('#dots').addClass('d-none');
+                    $('#more-content').removeClass('d-none');
+                    $('#less-btn').removeClass('d-none');
+                });
+
+                $('#less-btn').click(function () {
+                    $('#dots').removeClass('d-none');
+                    $('#more-content').addClass('d-none');
+                    $('#less-btn').addClass('d-none');
+                });
+            } else {
+                $('#description').html(`${contentArray.join(' ')}`);
+            }
+
+            // Handle quantity
+            const inputQuantity = $('#input-quantity');
+            const maxQuantity = Number(inputQuantity.attr('max'));
+            inputQuantity.blur((e) => {
+                const value = inputQuantity.val();
+                if (value < 0) {
+                    inputQuantity.val(0);
+                } else if (value > maxQuantity) {
+                    inputQuantity.val(maxQuantity);
+                }
+            });
+
+            $('#add-to-cart-form').submit((e) => {
+                if (inputQuantity.val() == 0) {
+                    e.preventDefault();
+                }
+            });
+
+            // Handle carousel
+            let multipleCardCarousel = document.querySelector('#carouselRelatedBooks');
+            let numOfCard = 3;
+            if (window.matchMedia('(min-width: 768px)').matches) {
+                numOfCard = 5;
+            } else if (window.matchMedia('(min-width: 992px)').matches) {
+                numOfCard = 7;
+            }
+            let carouselWidth = $('.carousel-inner.related-book')[0].scrollWidth;
+            let cardWidth = $('.carousel-item.related-book').width();
+            let scrollPosition = 0;
+
+            $('.carousel-control-next.related-book').click((e) => {
+                if (scrollPosition < carouselWidth - cardWidth * numOfCard) {
+                    //check if you can go any further
+                    scrollPosition += cardWidth; //update scroll position
+                    $('.carousel-inner.related-book').animate(
+                        { scrollLeft: scrollPosition },
+                        600
+                    ); //scroll left
+                }
+            });
+
+            $('.carousel-control-prev.related-book').on('click', function () {
+                if (scrollPosition > 0) {
+                    scrollPosition -= cardWidth;
+                    $('.carousel-inner.related-book').animate(
+                        { scrollLeft: scrollPosition },
+                        600
+                    );
+                }
+            });
+
+            let carousel = new bootstrap.Carousel(multipleCardCarousel, {
+                interval: false,
+            });
+        });
+    </script>
+}

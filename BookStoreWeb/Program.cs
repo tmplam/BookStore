@@ -8,6 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDistributedMemoryCache(); // Automatically remove cache when unused
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true; // Can't be accessed by JS
+    options.Cookie.IsEssential = true;
+});
+
 
 // Add database context and repository
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -33,6 +41,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "areas",

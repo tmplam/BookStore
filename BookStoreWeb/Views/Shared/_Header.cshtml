@@ -1,0 +1,108 @@
+﻿@{
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+    var area = ViewContext.RouteData.Values["area"]?.ToString();
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+
+<header class="p-3 border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center">
+            <a href="/"
+               class="d-flex align-items-center mb-lg-0 link-body-emphasis text-decoration-none me-2 fs-3">
+                <img style="width: 38px" src="~/favicon.png" alt="Book icon" />
+            </a>
+
+            <ul class="nav nav-pills col-auto me-auto justify-content-center mb-md-0 fw-bold">
+                <li class="nav-item" id="home">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index"
+                       class="nav-link px-2 @(area == "Customer" &&  controller == "Home" && action == "Index" ? "link-secondary" : "link-body-emphasis")">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customer/orders"
+                       class="nav-link px-2 @(area == "Customer" &&  controller == "Home" && action == "?" ? "link-secondary" : "link-body-emphasis")">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/customer/cart"
+                       class="nav-link px-2 @(area == "Customer" &&  controller == "Home" && action == "?" ? "link-secondary" : "link-body-emphasis") position-relative">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        @* <% if(typeof numCartItem !== 'undefined' && numCartItem) { %>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <%= numCartItem %>
+                        </span>
+                        <% } %> *@
+                    </a>
+                </li>
+            </ul>
+
+            <div class="form-check form-switch mb-0 me-4">
+                <input class="form-check-input" type="checkbox" role="switch" id="darkMode" @(darkMode == ThemeSettings.DarkMode ? "checked" : "")/>
+                <label class="form-check-label" for="darkMode">
+                    @if (darkMode == ThemeSettings.DarkMode) 
+                    {
+                        <i id="dark-mode-icon" class="fa-solid fa-moon fa-lg"></i>
+                    }
+                    else 
+                    {
+                        <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
+                    }
+                </label>
+            </div>
+            @* <% if (typeof loginUser !=='undefined' && loginUser) { %>
+            <div class="dropdown text-end">
+                <a href="#"
+                   class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    <img src="<%= loginUser.avatar%>"
+                         alt="mdo"
+                         width="32"
+                         height="32"
+                         class="rounded-circle" />
+                </a>
+                <ul class="dropdown-menu text-small">
+                    <li>
+                        <a class="dropdown-item" href="/customer/orders">
+                            <span style="width: 20px"
+                                  class="d-inline-flex justify-content-center me-2">
+                                <i class="fa-solid fa-table"></i>
+                            </span>Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/customer/cart">
+                            <span style="width: 20px"
+                                  class="d-inline-flex justify-content-center me-2"><i class="fa-solid fa-cart-shopping"></i></span>Cart
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/customer/profile">
+                            <span style="width: 20px"
+                                  class="d-inline-flex justify-content-center me-2"><i class="fa-solid fa-user"></i></span>Profile
+                        </a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="/auth/logout">
+                            <span style="width: 20px"
+                                  class="d-inline-flex justify-content-center me-2">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                            </span>Sign out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <% } else { %> *@
+            <div>
+                <a class="btn btn-outline-primary" href="/auth/login">Login</a>
+                <a class="btn btn-primary" href="/auth/signup">Sign-up</a>
+            </div>
+            @* <% } %> *@
+        </div>
+    </div>
+</header>

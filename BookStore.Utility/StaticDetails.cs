@@ -3,5 +3,6 @@
     // Store constants
     public static class StaticDetails
     {
+        
     }
 }

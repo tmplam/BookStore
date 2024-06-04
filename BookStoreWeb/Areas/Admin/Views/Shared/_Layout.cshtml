@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+﻿@{
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="@darkMode">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -56,6 +60,7 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"></script>
     <script src="~/js/admin/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <partial name="_Notification" />
 </body>

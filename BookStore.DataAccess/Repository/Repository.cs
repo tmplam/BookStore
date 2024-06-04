@@ -16,13 +16,13 @@ namespace BookStore.DataAccess.Repository
             dbSet = dbContext.Set<T>();
         }
 
-
         public async Task AddAsync(T entity)
         {
             await dbSet.AddAsync(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null,
+            int? page = null, int? perPage = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
@@ -38,6 +38,12 @@ namespace BookStore.DataAccess.Repository
                     query = query.Include(includeProperty);
                 }
             }
+
+            if (page != null && perPage != null)
+            {
+                query = query.Skip((int)((page - 1) * perPage)).Take((int)perPage);
+            }
+
             return await query.ToListAsync();
         }
 
