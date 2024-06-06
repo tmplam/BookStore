@@ -1,0 +1,60 @@
+﻿@model Company
+
+@{
+    ViewData["Title"] = "Update company";
+    ViewData["ActivePage"] = ManageNavPages.Company;
+}
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="text-bg-primary card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                <h2 class="m-0 text-nowrap text-uppercase">
+                    <i class="fa-solid fa-circle-plus"></i> UPDATE COMPANY
+                </h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="datatable-area">
+                    <form method="post"
+                          class="row g-3"
+                          id="add-product"
+                          enctype="multipart/form-data">
+                        <input readonly asp-for="Id" hidden />
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Address" class="form-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12 text-end">
+                            <button type="submit"
+                                    class="btn btn-primary px-5 py-2 fw-semibold">
+                                UPDATE
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

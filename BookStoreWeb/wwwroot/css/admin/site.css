@@ -21,6 +21,7 @@
 
 #content {
     transition: margin 0.5s;
+    min-height: calc(100vh - 74px);
 }
 
 /* Css for ellipsis */

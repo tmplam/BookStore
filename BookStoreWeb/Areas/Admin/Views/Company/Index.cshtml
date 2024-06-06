@@ -1,0 +1,147 @@
+﻿@model List<Company>
+
+@{
+    ViewData["Title"] = "Manage companies";
+    ViewData["ActivePage"] = ManageNavPages.Company;
+}
+
+<div class="row g-3">
+    <div class="col-xl-12 col-md-12">
+        <div class="card shadow">
+            <div class="bg-body-dark card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 text-nowrap text-uppercase">
+                    <i class="fa-solid fa-building"></i> COMPANIES
+                </h4>
+                <div class="w-100 d-flex justify-content-end">
+                    <a asp-area="Admin" asp-controller="Company" asp-action="Create"
+                       class="btn btn-primary fw-semibold text-uppercase">
+                        <i class="fa-solid fa-circle-plus me-1"></i>
+                        ADD COMPANY
+                    </a>
+                </div>
+            </div>
+            <div class="card-body px-3 py-2">
+                <div class="datatable-area scroll-container overflow-auto">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap"># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i++)
+                            {
+                                var company = Model[i];
+
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <span class="one-line-ellipsis" title="@company.Name">
+                                            @company.Name
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="two-line-ellipsis" title="@company.Address">
+                                            @company.Address
+                                        </span>
+                                    </td>
+                                    <td>@company.PhoneNumber</td>
+                                    <td>@company.Email</td>
+                                    <td>
+                                        <div class="text-nowrap">
+                                            <a class="btn btn-primary py-1" asp-area="Admin" asp-controller="Company"
+                                               asp-action="Update" asp-route-id="@company.Id">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            <button class="btn btn-danger py-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    data-bs-id="@company.Id">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">The company will be deleted permanently!</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button id="delete-company-btn" type="button" class="btn btn-danger">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Delete form *@
+<form id="delete-company-form" class="visually-hidden" method="POST"></form>
+
+@section Scripts {
+    <script>
+        $(() => {
+            // Data table
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+
+            // Delete company modal
+            const deleteModal = $('#deleteModal');
+            const deleteBtn = $('#delete-company-btn');
+            let companyId;
+            if (deleteModal) {
+                deleteModal.on('show.bs.modal', (event) => {
+                    const button = $(event.relatedTarget);
+                    companyId = button.attr('data-bs-id');
+                });
+            }
+
+            const deleteForm = $('#delete-company-form');
+            deleteBtn.click(function () {
+                deleteForm.attr('action', `/admin/company/delete/${companyId}`);
+                deleteForm.submit();
+            });
+        });
+    </script>
+}

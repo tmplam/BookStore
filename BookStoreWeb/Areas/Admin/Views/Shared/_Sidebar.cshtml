@@ -44,6 +44,13 @@
             </a>
         </li>
         <li>
+            <a asp-area="Admin" asp-controller="Company" asp-action="Index"
+               class="nav-link @ManageNavPages.CompanyNavClass(ViewContext) text-nowrap">
+                <span class="me-2"><i class="fa-solid fa-building"></i></span>
+                Companies
+            </a>
+        </li>
+        <li>
             <a asp-area="Admin" asp-controller="Customer" asp-action="Index"
                class="nav-link @ManageNavPages.CustomerNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-user"></i></i></span>

@@ -9,6 +9,7 @@ namespace BookStore.Models
         public Guid Id { get; set; }
 
         [Required]
+        [Display(Name = "Company name")]
         public string Name { get; set; }
 
         [Required]
@@ -16,6 +17,7 @@ namespace BookStore.Models
 
         [Phone]
         [Required]
+        [Display(Name = "Phone number")]
         public string PhoneNumber { get; set; }
 
         [EmailAddress]

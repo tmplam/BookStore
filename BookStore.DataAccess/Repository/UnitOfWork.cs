@@ -2,6 +2,8 @@
 using BookStore.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore.Storage;
 
+#nullable disable
+
 namespace BookStore.DataAccess.Repository
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
@@ -12,6 +14,7 @@ namespace BookStore.DataAccess.Repository
 
         public IGenreRepository Genre { get; private set; }
         public IProductRepository Product { get; private set; }
+        public ICompanyRepository Company { get; private set; }
 
         private IDbContextTransaction transaction;
 
@@ -20,6 +23,7 @@ namespace BookStore.DataAccess.Repository
             this.dbContext = dbContext;
             Genre = new GenreRepository(dbContext);
             Product = new ProductRepository(dbContext);
+            Company = new CompanyRepository(dbContext);
         }
 
         public async Task CreateTransactionAsync()

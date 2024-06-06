@@ -4,6 +4,7 @@
     {
         public IGenreRepository Genre { get; }
         public IProductRepository Product { get; }
+        public ICompanyRepository Company { get; }
 
         Task CreateTransactionAsync();
         Task CommitAsync();
