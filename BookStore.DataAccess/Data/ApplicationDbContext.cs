@@ -1,9 +1,11 @@
 ﻿using BookStore.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.DataAccess.Data
 {
-	public class ApplicationDbContext : DbContext
+	public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 	{
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -12,6 +14,8 @@ namespace BookStore.DataAccess.Data
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1182,6 +1186,52 @@ namespace BookStore.DataAccess.Data
                 },
             };
             modelBuilder.Entity<Product>().HasData(products);
+
+            // Seeding 5 companies
+            var companies = new List<Company>()
+            {
+                new Company ()
+                {
+                    Id = Guid.Parse("be0478d4-6e0a-4e9d-a177-b7d35de4dc49"),
+                    Name = "Bosh Technology",
+                    Address = "1005 Harron Drive, Baltimore City",
+                    PhoneNumber = "4434579013",
+                    Email = "technology@bosh.tech.com"
+                },
+                new Company ()
+                {
+                    Id = Guid.Parse("7963fc2d-b529-4bd0-9720-37160d69558e"),
+                    Name = "KMS Solution",
+                    Address = "116 Indiana Avenue, Makaha City",
+                    PhoneNumber = "8086954120",
+                    Email = "supplies@kms.solution.com"
+                },
+                new Company ()
+                {
+                    Id = Guid.Parse("f506bbdc-a84d-4a64-b894-d0155da7b9b7"),
+                    Name = "Green Land",
+                    Address = "1363 Benson Street, Niagara City",
+                    PhoneNumber = "7152510523",
+                    Email = "supplies@greenland.com"
+                },
+                new Company ()
+                {
+                    Id = Guid.Parse("c04b0234-4ab3-4e35-9924-a23630a3d912"),
+                    Name = "Fast Delivery",
+                    Address = "4650 Stonepot Road, Newark City",
+                    PhoneNumber = "9083835330",
+                    Email = "supplies@fast.del.com"
+                },
+                new Company ()
+                {
+                    Id = Guid.Parse("d798bf41-7b16-4588-aac0-2c8e3b405cdc"),
+                    Name = "Book Master",
+                    Address = "4832 Hedge Street, Piscataway City",
+                    PhoneNumber = "9085995862",
+                    Email = "supplies@book.mas.us"
+                }
+            };
+            modelBuilder.Entity<Company>().HasData(companies);
         }
     }
 }

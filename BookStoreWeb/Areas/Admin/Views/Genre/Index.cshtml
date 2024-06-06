@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Manage genres";
+    ViewData["ActivePage"] = ManageNavPages.Genre;
 }
 
 <div class="row g-3">
@@ -193,6 +194,10 @@
 
 @section Scripts 
 {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
     <script>
         $(() => {
             @* Data table *@

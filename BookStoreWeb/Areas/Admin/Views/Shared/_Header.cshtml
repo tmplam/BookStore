@@ -26,63 +26,8 @@
                     }
                 </label>
             </div>
-            <div class="dropdown text-end">
-                <a
-                    href="#"
-                    class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <img
-                        src="<%= loginUser.avatar%>"
-                        alt="mdo"
-                        width="32"
-                        height="32"
-                        class="rounded-circle"
-                    />
-                </a>
-                <ul class="dropdown-menu text-small">
-                    <li>
-                        <a class="dropdown-item" href="/customer/orders">
-                            <span
-                                style="width: 20px"
-                                class="d-inline-flex justify-content-center me-2"
-                            >
-                                <i class="fa-solid fa-table"></i></span
-                            >Orders</a
-                        >
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="/customer/cart"
-                            ><span
-                                style="width: 20px"
-                                class="d-inline-flex justify-content-center me-2"
-                                ><i class="fa-solid fa-cart-shopping"></i></span
-                            >Cart
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="/customer/profile"
-                            ><span
-                                style="width: 20px"
-                                class="d-inline-flex justify-content-center me-2"
-                                ><i class="fa-solid fa-user"></i></span
-                            >Profile</a
-                        >
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item" href="/auth/logout">
-                            <span
-                                style="width: 20px"
-                                class="d-inline-flex justify-content-center me-2"
-                            >
-                                <i class="fa-solid fa-right-from-bracket"></i></span
-                            >Sign out
-                        </a>
-                    </li>
-                </ul>
-            </div>
+
+            <partial name="_LoginPartial" />
         </div>
     </div>
 </header>

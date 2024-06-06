@@ -1,10 +1,13 @@
 ﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using BookStore.Utility.StaticDetails;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = ApplicationRoles.Admin)]
     public class GenreController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -14,6 +17,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
             this.unitOfWork = unitOfWork;
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             IEnumerable<Genre> genres = await unitOfWork.Genre.GetAllAsync(includeProperties: "Products");

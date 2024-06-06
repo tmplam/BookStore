@@ -1,4 +1,4 @@
-﻿using BookStore.Utility;
+﻿using BookStore.Utility.StaticDetails;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStoreWeb.Controllers

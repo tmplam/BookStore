@@ -7,7 +7,7 @@
 
 @media screen and (min-width: 900px) {
     #sidebar:not(.hide) ~ #content {
-        padding-left: 280px;
+        margin-left: 280px;
     }
 }
 
@@ -15,9 +15,12 @@
     transform: translateX(-280px);
 }
 
-#sidebar,
+#sidebar {
+    transition: transform 0.5s;
+}
+
 #content {
-    transition: 0.5s;
+    transition: margin 0.5s;
 }
 
 /* Css for ellipsis */

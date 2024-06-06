@@ -1,12 +1,15 @@
 ﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using BookStore.Models.ViewModels;
+using BookStore.Utility.StaticDetails;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStoreWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = ApplicationRoles.Admin)]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -19,6 +22,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             IEnumerable<Product> products = await unitOfWork.Product.GetAllAsync(includeProperties: "Genre");
@@ -101,6 +105,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Update(Guid id)
         {
             var product = await unitOfWork.Product.GetAsync(product => product.Id == id);

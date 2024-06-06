@@ -1,0 +1,74 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<main class="bg-body-secondary">
+    <div class="container py-2">
+        <div class="row justify-content-center align-items-center my-3">
+            <div class="col-12 col-md-9 col-lg-6 col-xl-5">
+                <form id="account" method="post" class="text-body-emphasis p-4 rounded-4 shadow card">
+                    <h1 class="text-center text-primary mb-2 text-uppercase">Login</h1>
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger text-center my-2" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="Input.Email" class="form-label">Email</label>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <label asp-for="Input.Password" class="form-label">Password</label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="checkbox mb-2">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(model => model.Input.RememberMe)
+                        </label>
+                    </div>
+
+                    <div class="mb-2">
+                        <button id="login-submit" type="submit" class="w-100 btn px-4 py-2 btn-primary">Login</button>
+                    </div>
+  
+                    <p class="text-center mb-0">
+                        You don't have an account?
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold">Register</a> now.
+                    </p>
+
+                    <p class="text-center mb-0">
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none fw-bold">Forgot</a> your password?
+                    </p>
+
+                    <p class="text-center mb-0">
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation" class="text-decoration-none fw-bold">Resend</a> email confirmation.
+                    </p>
+
+                    <div class="divider d-flex align-items-center my-3">
+                        <p class="mb-0 flex-grow-1 ms-2"
+                           style="height: 1px; background-color: #eee"></p>
+                        <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+                        <p class="mb-0 flex-grow-1 me-2"
+                           style="height: 1px; background-color: #eee"></p>
+                    </div>
+
+                    <div class="d-flex justify-content-center mb-2">
+                        <a class="btn btn-danger px-4 py-2 col-12"
+                           href="/auth/google"
+                           role="button">
+                            <i class="fab fa-google me-2"></i>Continue with Google
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

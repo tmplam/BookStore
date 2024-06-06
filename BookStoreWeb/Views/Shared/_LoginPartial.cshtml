@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="dropdown text-end">
+        <a href="#"
+            class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <img src="~/images/users/avatars/default.png"
+                    alt="mdo"
+                    width="32"
+                    height="32"
+                    class="rounded-circle" />
+        </a>
+        <ul class="dropdown-menu text-small">
+            <li>
+                <a class="dropdown-item" id="manage" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <span style="width: 20px" class="d-inline-flex justify-content-center me-2">
+                        <i class="fa-solid fa-user"></i>
+                    </span>Profile
+                </a>
+            </li>
+            @if (User.IsInRole(ApplicationRoles.Admin))
+            {
+                <li>
+                    <a class="dropdown-item" id="manage" asp-area="Admin" asp-controller="Product">
+                        <span style="width: 20px" class="d-inline-flex justify-content-center me-2">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </span>Admin
+                    </a>
+                </li>
+            }
+            <li>
+                <hr class="dropdown-divider" />
+            </li>
+            <li>
+                <form id="logoutForm" hidden asp-area="Identity" asp-page="/Account/Logout" 
+                    asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                </form>
+                <button id="logout" type="submit" class="dropdown-item"
+                        onclick="$('#logoutForm').submit()">
+                    <span style="width: 20px" class="d-inline-flex justify-content-center me-2">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </span>Logout
+                </button>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <div>
+        <a class="btn btn-outline-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="btn btn-primary" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </div>
+}
