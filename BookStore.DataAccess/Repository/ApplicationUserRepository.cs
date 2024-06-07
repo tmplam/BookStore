@@ -4,18 +4,18 @@ using BookStore.Models;
 
 namespace BookStore.DataAccess.Repository
 {
-    public class ProductRepository : Repository<Product>, IProductRepository
+    public class ApplicationUserRepository : Repository<ApplicationUser>, IAppliccationRepository
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public ProductRepository(ApplicationDbContext dbContext) : base(dbContext)
+        public ApplicationUserRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public void Update(Product product)
+        public void Update(ApplicationUser user)
         {
-            _dbContext.Products.Update(product);
+            _dbContext.ApplicationUsers.Update(user);
         }
     }
 }

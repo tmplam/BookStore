@@ -6,16 +6,16 @@ namespace BookStore.DataAccess.Repository
 {
     public class GenreRepository : Repository<Genre>, IGenreRepository
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public GenreRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         public void Update(Genre genre)
         {
-            dbContext.Genres.Update(genre);
+            _dbContext.Genres.Update(genre);
         }
     }
 }

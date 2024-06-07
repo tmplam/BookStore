@@ -10,41 +10,43 @@ namespace BookStore.DataAccess.Repository
     {
         private bool _disposed;
 
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public IGenreRepository Genre { get; private set; }
         public IProductRepository Product { get; private set; }
         public ICompanyRepository Company { get; private set; }
+        public IAppliccationRepository ApplicationUser { get; private set; }
 
-        private IDbContextTransaction transaction;
+        private IDbContextTransaction _transaction;
 
         public UnitOfWork(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
             Genre = new GenreRepository(dbContext);
             Product = new ProductRepository(dbContext);
             Company = new CompanyRepository(dbContext);
+            ApplicationUser = new ApplicationUserRepository(dbContext);
         }
 
         public async Task CreateTransactionAsync()
         {
-            transaction = await dbContext.Database.BeginTransactionAsync();
+            _transaction = await _dbContext.Database.BeginTransactionAsync();
         }
 
         public async Task CommitAsync()
         {
-            await transaction.CommitAsync();
+            await _transaction.CommitAsync();
         }
 
         public async Task RollbackAsync()
         {
-            await transaction.RollbackAsync();
-            transaction.Dispose();
+            await _transaction.RollbackAsync();
+            _transaction.Dispose();
         }
 
         public async Task SaveChangesAsync()
         {
-            await dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -60,7 +62,7 @@ namespace BookStore.DataAccess.Repository
             {
                 if (disposing)
                 {
-                    dbContext.Dispose();
+                    _dbContext.Dispose();
                 }
             }
             _disposed = true;

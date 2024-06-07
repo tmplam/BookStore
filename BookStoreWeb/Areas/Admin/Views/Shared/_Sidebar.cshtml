@@ -1,6 +1,6 @@
 ﻿<div
     class="flex-column flex-shrink-0 bg-body-tertiary p-3 position-fixed vh-100"
-    style="width: 280px; z-index: 1"
+    style="width: 280px; z-index: 9"
     id="sidebar"
 >
     <div class="d-flex align-items-center">
@@ -51,10 +51,10 @@
             </a>
         </li>
         <li>
-            <a asp-area="Admin" asp-controller="Customer" asp-action="Index"
-               class="nav-link @ManageNavPages.CustomerNavClass(ViewContext) text-nowrap">
+            <a asp-area="Admin" asp-controller="User" asp-action="Index"
+               class="nav-link @ManageNavPages.UserNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-user"></i></i></span>
-                Customers
+                Users
             </a>
         </li>
     </ul>

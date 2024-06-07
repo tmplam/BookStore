@@ -86,6 +86,10 @@ namespace BookStoreWeb.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -106,6 +110,7 @@ namespace BookStoreWeb.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             public string Role { get; set; }
+
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
         }
@@ -113,9 +118,9 @@ namespace BookStoreWeb.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!_roleManager.RoleExistsAsync(ApplicationRoles.Customer).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(ApplicationRoles.Individual).GetAwaiter().GetResult())
             {
-                await _roleManager.CreateAsync(new IdentityRole(ApplicationRoles.Customer));
+                await _roleManager.CreateAsync(new IdentityRole(ApplicationRoles.Individual));
                 await _roleManager.CreateAsync(new IdentityRole(ApplicationRoles.Company));
                 await _roleManager.CreateAsync(new IdentityRole(ApplicationRoles.Admin));
                 await _roleManager.CreateAsync(new IdentityRole(ApplicationRoles.Employee));
@@ -142,6 +147,7 @@ namespace BookStoreWeb.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.Name = Input.Name;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -150,14 +156,13 @@ namespace BookStoreWeb.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    // 
                     if (!string.IsNullOrEmpty(Input.Role))
                     {
                         await _userManager.AddToRoleAsync(user, Input.Role);
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(user, ApplicationRoles.Customer);
+                        await _userManager.AddToRoleAsync(user, ApplicationRoles.Individual);
                     }
 
                     var userId = await _userManager.GetUserIdAsync(user);

@@ -7,12 +7,12 @@ namespace BookStore.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext _dbContext;
         internal DbSet<T> dbSet;
 
         public Repository(ApplicationDbContext dbContext)
         {
-            this.dbContext = dbContext;
+            _dbContext = dbContext;
             dbSet = dbContext.Set<T>();
         }
 

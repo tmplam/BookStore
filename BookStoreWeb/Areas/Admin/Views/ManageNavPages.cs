@@ -11,14 +11,14 @@ namespace BookStoreWeb.Areas.Admin.Views
         public static string Product => "Product";
         public static string Genre => "Genre";
         public static string Company => "Company";
-        public static string Customer => "Customer";
+        public static string User => "User";
 
         public static string DashboardNavClass(ViewContext viewContext) => PageNavClass(viewContext, Dashboard);
         public static string OrderNavClass(ViewContext viewContext) => PageNavClass(viewContext, Order);
         public static string ProductNavClass(ViewContext viewContext) => PageNavClass(viewContext, Product);
         public static string GenreNavClass(ViewContext viewContext) => PageNavClass(viewContext, Genre);
         public static string CompanyNavClass(ViewContext viewContext) => PageNavClass(viewContext, Company);
-        public static string CustomerNavClass(ViewContext viewContext) => PageNavClass(viewContext, Customer);
+        public static string UserNavClass(ViewContext viewContext) => PageNavClass(viewContext, User);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {

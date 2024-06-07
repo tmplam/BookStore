@@ -1,0 +1,146 @@
+﻿@model List<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Manage users";
+    ViewData["ActivePage"] = ManageNavPages.User;
+}
+
+<div class="row g-3">
+    <div class="col-xl-12 col-md-12">
+        <div class="card shadow">
+            <div class="bg-body-dark card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0 text-nowrap text-uppercase">
+                    <i class="fa-solid fa-building"></i> USERS
+                </h4>
+                <div class="w-100 d-flex justify-content-end">
+                    <a asp-area="Admin" asp-controller="User" asp-action="Create"
+                       class="btn btn-primary fw-semibold text-uppercase">
+                        <i class="fa-solid fa-circle-plus me-1"></i>
+                        ADD USER
+                    </a>
+                </div>
+            </div>
+            <div class="card-body px-3 py-2">
+                <div class="datatable-area scroll-container overflow-auto">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap"># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th># &nbsp;&nbsp;</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @for (var i = 0; i < Model.Count; i++)
+                            {
+                                var user = Model[i];
+
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@user.Name</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.PhoneNumber</td>
+                                    <td>@(user.Company?.Name ?? "")</td>
+                                    <td>@user.Role</td>
+                                    <td>
+                                        <div class="text-nowrap">
+                                            @if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.UtcNow)
+                                            {
+                                                <a class="btn btn-success py-1 btn-lock-unlock"
+                                                   href="@user.Id">
+                                                    <i class="fa-solid fa-lock-open ms-1"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger py-1 btn-lock-unlock"
+                                                   href="@user.Id">
+                                                    <i class="fa-solid fa-lock mx-1"></i>
+                                                </a>
+                                            }
+
+                                            <a class="btn btn-primary py-1" href="/Admin/User/RoleManagement?userId=@user.Id">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(() => {
+            // Data table
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+
+            // Handle lock/unluck user
+            let btnBlock = $('.btn-lock-unlock');
+
+            btnBlock.click(async (e) => {
+                e.preventDefault();
+
+                const aItem = $(e.target).parents('.btn-lock-unlock').attr('href')
+                    ? $(e.target).parents('.btn-lock-unlock')
+                    : $(e.target);
+                let userId = aItem.attr('href');
+
+                const isBlocked = aItem.children('i').hasClass('fa-lock-open');
+
+                const response = await fetch('/Admin/User/ToggleLockout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userId),
+                });
+                const data = await response.json();
+                if (data.success) {
+                    aItem.toggleClass('btn-success');
+                    aItem.toggleClass('btn-danger');
+                    aItem.find('i').toggleClass('fa-lock-open');
+                    aItem.find('i').toggleClass('fa-lock');
+                    aItem.find('i').toggleClass('mx-1');
+                    aItem.find('i').toggleClass('ms-1');
+                    if (isBlocked) {
+                        toastr.success('Unlock user successfully');
+                    } else {
+                        toastr.success('Lock user successfully');
+                    }
+                } else {
+                    if (isBlocked) {
+                        toastr.error('Fail to unlock customer');
+                    }
+                    else {
+                        toastr.error('Fail to lock customer');
+                    }
+                }
+            });
+        });
+    </script>
+}
