@@ -1,0 +1,19 @@
+﻿@model Guid
+
+@{
+    ViewData["Title"] = "Order confirmation";
+}
+
+<main>
+    <div class="py-2 bg-body-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1>Order Placed Successfully!</h1>
+                    <h5 class="d-inline text-success">Your Order Code is: <span class="fw-light text-body">@Model.ToString()</span></h5>
+                    <img class="my-2 w-75 shadow rounded-3" src="~/images/lawn_leaf.jpg" alt="Lawn leaf" />
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

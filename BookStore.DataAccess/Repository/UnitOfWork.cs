@@ -15,6 +15,9 @@ namespace BookStore.DataAccess.Repository
         public IGenreRepository Genre { get; private set; }
         public IProductRepository Product { get; private set; }
         public ICompanyRepository Company { get; private set; }
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+        public IOrderHeaderRepository OrderHeader { get; private set; }
+        public IOrderDetailRepository OrderDetail { get; private set; }
         public IAppliccationRepository ApplicationUser { get; private set; }
 
         private IDbContextTransaction _transaction;
@@ -25,6 +28,9 @@ namespace BookStore.DataAccess.Repository
             Genre = new GenreRepository(dbContext);
             Product = new ProductRepository(dbContext);
             Company = new CompanyRepository(dbContext);
+            ShoppingCart = new ShoppingCartRepository(dbContext);
+            OrderHeader = new OrderHeaderRepository(dbContext);
+            OrderDetail = new OrderDetailRepository(dbContext);
             ApplicationUser = new ApplicationUserRepository(dbContext);
         }
 

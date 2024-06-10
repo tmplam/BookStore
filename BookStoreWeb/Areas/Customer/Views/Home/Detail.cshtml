@@ -1,8 +1,7 @@
-﻿@model Product
+﻿@model ShoppingCart
 
 @{
     ViewData["Title"] = "Product detail";
-    ViewData["ActivePage"] = ManageNavPages.Home;
 }
 
 @* Split from Detail.cshtml.css because these elements are added by javascript *@
@@ -21,9 +20,9 @@
                 <div class="card-header text-bg-dark py-3">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <h4 class="text-white text-uppercase">@Model.Title</h4>
+                            <h4 class="text-white text-uppercase">@Model.Product.Title</h4>
                             <p class="text-white-50 fw-semibold mb-0">
-                                by @Model.Author
+                                by @Model.Product.Author
                             </p>
                         </div>
                     </div>
@@ -32,9 +31,7 @@
                     <div class="container p-2">
                         <div class="row g-0">
                             <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                                <div id="myCarousel"
-                                     class="carousel slide"
-                                     data-bs-ride="carousel">
+                                <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
                                     <ol class="carousel-indicators list-unstyled">
                                         <li data-bs-target="#myCarousel"
                                             data-bs-slide-to="0"
@@ -43,32 +40,27 @@
                                             data-bs-slide-to="1"></li>
                                     </ol>
 
-                                    <div class="carousel-inner h-0"
-                                         style="padding-bottom: 125%">
+                                    <div class="carousel-inner h-0" style="padding-bottom: 125%">
                                         <div class="carousel-item position-absolute active">
                                             <img class="d-block w-100 h-100"
-                                                 src="/@Model.FrontCover"
+                                                 src="/@Model.Product.FrontCover"
                                                  alt="First slide" />
                                         </div>
                                         <div class="carousel-item position-absolute">
                                             <img class="d-block w-100 h-100"
-                                                 src="/@Model.BackCover"
+                                                 src="/@Model.Product.BackCover"
                                                  alt="Second slide" />
                                         </div>
                                     </div>
 
-                                    <a class="carousel-control-prev"
-                                       href="#myCarousel"
-                                       role="button"
-                                       data-bs-slide="prev">
+                                    <a class="carousel-control-prev" href="#myCarousel"
+                                       role="button" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon"></span>
                                         <span class="sr-only">Previous</span>
                                     </a>
 
-                                    <a class="carousel-control-next"
-                                       href="#myCarousel"
-                                       role="button"
-                                       data-bs-slide="next">
+                                    <a class="carousel-control-next" href="#myCarousel"
+                                       role="button" data-bs-slide="next">
                                         <span class="carousel-control-next-icon"></span>
                                         <span class="sr-only">Next</span>
                                     </a>
@@ -78,20 +70,20 @@
                             <div class="col-12 col-lg-6 offset-lg-1">
                                 <div class="col-12 col-md-6 pb-4">
                                     <span class="badge rounded-pill bg-warning px-3 py-2">
-                                        @Model.Genre.Name
+                                        @Model.Product.Genre.Name
                                     </span>
                                 </div>
                                 <div class="row">
                                     <p class="text-body-emphasis mb-0">
                                         <span class="fw-bold">ISBN:</span>
-                                        <span class="text-secondary">@Model.ISBN</span>
+                                        <span class="text-secondary">@Model.Product.ISBN</span>
                                     </p>
                                 </div>
                                 <div class="row">
                                     <h6 class="text-body-emphasis pb-2">
                                         <span class="fw-bold">Price:</span>
                                         <span class="text-success">
-                                            $@Model.Price
+                                            $@Model.Product.Price
                                         </span>
                                     </h6>
                                 </div>
@@ -102,7 +94,8 @@
                                        style="text-align: justify"></p>
                                 </div>
 
-                                <form id="add-to-cart-form" action="" method="post">
+                                <form method="post">
+                                    <input asp-for="ProductId" hidden />
                                     <div class="row">
                                         <div class="col">
                                             <h6 class="text-body-emphasis">Quantity:</h6>
@@ -117,13 +110,12 @@
                                                     <i class="fas fa-minus"></i>
                                                 </span>
 
-                                                <input min="@(Model.Stock > 0 ? 1 : 0)"
-                                                       max="@Model.Stock"
+                                                <input min="@(Model.Product.Stock > 0 ? 1 : 0)"
+                                                       max="@Model.Product.Stock"
                                                        class="form-control text-center border-success border-start-0"
-                                                       name="quantity"
-                                                       value="@(Model.Stock > 0 ? 1 : 0)"
-                                                       type="number"
-                                                       id="input-quantity" />
+                                                       asp-for="Quantity"
+                                                       value="@(Model.Product.Stock > 0 ? 1 : 0)"
+                                                       type="number" />
 
                                                 <span class="btn btn-outline-success px-3 input-group-text"
                                                       onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
@@ -135,7 +127,7 @@
                                             <h6 class="text-body-emphasis mb-0"
                                                 style="line-height: 32px">
                                                 In stock:
-                                                <span class="text-danger fs-3">@Model.Stock</span>
+                                                <span class="text-danger fs-3">@Model.Product.Stock</span>
                                             </h6>
                                         </div>
                                     </div>
@@ -163,7 +155,7 @@
     <script>
         $(() => {
             // Handle read more / less
-            let content = `@Model.Description`;
+            let content = `@Model.Product.Description`;
             const contentArray = content.split(/\s+/);
 
             if (contentArray.length > 100) {
@@ -201,7 +193,7 @@
             }
 
             // Handle quantity
-            const inputQuantity = $('#input-quantity');
+            const inputQuantity = $('#Quantity');
             const maxQuantity = Number(inputQuantity.attr('max'));
             inputQuantity.blur((e) => {
                 const value = inputQuantity.val();
@@ -210,49 +202,6 @@
                 } else if (value > maxQuantity) {
                     inputQuantity.val(maxQuantity);
                 }
-            });
-
-            $('#add-to-cart-form').submit((e) => {
-                if (inputQuantity.val() == 0) {
-                    e.preventDefault();
-                }
-            });
-
-            // Handle carousel
-            let multipleCardCarousel = document.querySelector('#carouselRelatedBooks');
-            let numOfCard = 3;
-            if (window.matchMedia('(min-width: 768px)').matches) {
-                numOfCard = 5;
-            } else if (window.matchMedia('(min-width: 992px)').matches) {
-                numOfCard = 7;
-            }
-            let carouselWidth = $('.carousel-inner.related-book')[0].scrollWidth;
-            let cardWidth = $('.carousel-item.related-book').width();
-            let scrollPosition = 0;
-
-            $('.carousel-control-next.related-book').click((e) => {
-                if (scrollPosition < carouselWidth - cardWidth * numOfCard) {
-                    //check if you can go any further
-                    scrollPosition += cardWidth; //update scroll position
-                    $('.carousel-inner.related-book').animate(
-                        { scrollLeft: scrollPosition },
-                        600
-                    ); //scroll left
-                }
-            });
-
-            $('.carousel-control-prev.related-book').on('click', function () {
-                if (scrollPosition > 0) {
-                    scrollPosition -= cardWidth;
-                    $('.carousel-inner.related-book').animate(
-                        { scrollLeft: scrollPosition },
-                        600
-                    );
-                }
-            });
-
-            let carousel = new bootstrap.Carousel(multipleCardCarousel, {
-                interval: false,
             });
         });
     </script>

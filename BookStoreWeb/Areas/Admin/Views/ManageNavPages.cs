@@ -4,7 +4,7 @@
 
 namespace BookStoreWeb.Areas.Admin.Views
 {
-    public static class ManageNavPages
+    public static class ManageOrderNav
     {
         public static string Dashboard => "Dashboard";
         public static string Order => "Order";

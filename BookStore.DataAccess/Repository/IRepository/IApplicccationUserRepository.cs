@@ -4,6 +4,6 @@ namespace BookStore.DataAccess.Repository.IRepository
 {
     public interface IAppliccationRepository : IRepository<ApplicationUser>
     {
-        void Update(ApplicationUser user);
+        void Update(ApplicationUser applicationUser);
     }
 }

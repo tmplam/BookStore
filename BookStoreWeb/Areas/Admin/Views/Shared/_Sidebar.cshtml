@@ -17,42 +17,42 @@
     <ul id="sidebar-nav" class="nav nav-pills flex-column mb-auto">
         <li>
             <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
-               class="nav-link @ManageNavPages.DashboardNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.DashboardNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-gauge-high" aria-current="page"></i></span>
                 Dashboard
             </a>
         </li>
         <li>
             <a asp-area="Admin" asp-controller="Order" asp-action="Index"
-               class="nav-link @ManageNavPages.OrderNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.OrderNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-table"></i></span>
                 Orders
             </a>
         </li>
         <li>
             <a asp-area="Admin" asp-controller="Product" asp-action="Index"
-               class="nav-link @ManageNavPages.ProductNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.ProductNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-tags"></i></span>
                 Products
             </a>
         </li>
         <li>
             <a asp-area="Admin" asp-controller="Genre" asp-action="Index"
-               class="nav-link @ManageNavPages.GenreNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.GenreNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-bookmark"></i></span>
                 Genres
             </a>
         </li>
         <li>
             <a asp-area="Admin" asp-controller="Company" asp-action="Index"
-               class="nav-link @ManageNavPages.CompanyNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.CompanyNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-building"></i></span>
                 Companies
             </a>
         </li>
         <li>
             <a asp-area="Admin" asp-controller="User" asp-action="Index"
-               class="nav-link @ManageNavPages.UserNavClass(ViewContext) text-nowrap">
+               class="nav-link @ManageOrderNav.UserNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-user"></i></i></span>
                 Users
             </a>

@@ -4,7 +4,7 @@
 
 namespace BookStoreWeb.Views
 {
-    public class ManageNavPages
+    public static class ManageNavPages
     {
         public static string Home => "Home";
         public static string Order => "Order";

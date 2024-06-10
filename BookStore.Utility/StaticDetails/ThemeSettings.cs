@@ -2,8 +2,8 @@
 {
     public static class ThemeSettings
     {
-        public const string DarkModeSessionKey = "DarkMode";
-        public const string LightMode = "light";
-        public const string DarkMode = "dark";
+        public static string DarkModeSessionKey => "DarkMode";
+        public static string LightMode => "light";
+        public static string DarkMode => "dark";
     }
 }

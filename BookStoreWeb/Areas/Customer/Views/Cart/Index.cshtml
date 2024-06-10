@@ -1,0 +1,127 @@
+﻿@model ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Shopping cart";
+    ViewData["ActivePage"] = ManageNavPages.Cart;
+}
+
+<main>
+    <div class="py-2 bg-body-secondary">
+        <div class="container">
+            <div class="card shadow border-0 my-3">
+                <div class="card-header text-bg-dark py-2">
+                    <div class="row px-4 align-items-center">
+                        <div class="col-6">
+                            <h5 class="text-white text-uppercase mb-0 py-3">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span class="ms-2">Shopping Cart</span>
+                            </h5>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a class="btn btn-outline-danger" href="/">
+                                Continue shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pb-0">
+                    <div class="container" style="min-height: 360px">
+                        @if (Model.ShoppingCarts.Count() > 0) 
+                        {
+                            <div class="row justify-content-center">
+                                <div class="col-10">
+                                    @foreach (var shoppingCart in Model.ShoppingCarts) 
+                                    {
+                                        <div class="row border-bottom py-3">
+                                            <div class="col-3 col-lg-2 ps-0 text-center">
+                                                <img src="/@shoppingCart.Product.FrontCover"
+                                                     class="rounded border w-100"
+                                                     style="aspect-ratio: 8 / 11; object-fit: cover" />
+                                            </div>
+                                            <div class="col-9 col-lg-6 pe-0">
+                                                <h5 class="text-uppercase text-secondary text-truncate fs-5"
+                                                    style="font-size: 12px">
+                                                    @shoppingCart.Product.Title
+                                                </h5>
+                                                <p class="text-secondary mb-1">
+                                                    <span class="fw-semibold text-success">Author:</span>
+                                                    @shoppingCart.Product.Author
+                                                </p>
+                                                <p class="text-secondary">
+                                                    <span class="fw-semibold text-warning">Description:</span>
+                                                    <br />
+                                                    <small class="three-line-ellipsis">@shoppingCart.Product.Description</small>
+                                                </p>
+                                            </div>
+                                            <div class="col-12 pt-3 pt-lg-0 col-lg-4 text-center row g-0 align-items-center">
+                                                <div class="col-4">
+                                                    <h6 class="fw-semibold d-flex mb-0 py-2">
+                                                        <span>$@shoppingCart.Product.Price</span>
+                                                        <span>&nbsp;x&nbsp;</span>
+                                                        <span>@shoppingCart.Quantity</span>
+                                                    </h6>
+                                                </div>
+
+                                                <div class="col-6 col-lg-6">
+                                                    <div class="w-75 btn-group">
+                                                        <a asp-action="Minus" asp-route-productId="@shoppingCart.ProductId" class="btn btn-outline-success py-2">
+                                                            <i class="fas fa-minus"></i>
+                                                        </a>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <a asp-action="Plus" asp-route-productId="@shoppingCart.ProductId" class="btn btn-outline-success py-2">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-2 text-end">
+                                                    <a asp-action="Eemove" asp-route-productId="@shoppingCart.ProductId" class="btn btn-danger py-2">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        } 
+                        else 
+                        {
+                            <div style="min-height: 360px"
+                                 class="d-flex justify-content-center align-items-center">
+                                <h4 class="text-danger fst-italic mb-0">
+                                    Your cart is empty now!
+                                </h4>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @if (Model.ShoppingCarts.Count() > 0) 
+                {
+                    <div class="card-footer">
+                        <div class="row justify-content-center g-0">
+                            <div class="col-10">
+                                <div class="row align-items-center g-0">
+                                    <div class="col-12 col-md-8 col-lg-9 pt-2 mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <h5 class="text-uppercase text-secondary">
+                                                Total:
+                                            </h5>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <h4>@Model.OrderHeader.OrderTotal.ToString("c")</h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4 col-lg-3">
+                                        <a asp-action="Summary" class="btn btn-primary form-control">
+                                            Summary
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</main>

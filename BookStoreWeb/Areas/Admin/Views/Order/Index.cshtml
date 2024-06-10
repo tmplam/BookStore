@@ -1,0 +1,100 @@
+﻿@using BookStoreWeb.Areas.Admin.Views.Order;
+@model List<OrderHeader>
+
+@{
+    ViewData["Title"] = "Manage orders";
+    ViewData["ActivePage"] = ManageOrderNav.Order;
+}
+
+<div class="row g-3">
+    <div class="col-xl-12 col-md-12">
+        <div class="mb-2 d-flex justify-content-end">
+            <div class="btn-group shadow flex-wrap" role="group">
+                <a asp-controller="Order"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.AllNavClass(Context)">
+                    All
+                </a>
+                <a asp-controller="Order" asp-route-status="@PaymentStatuses.PaymentStatusDelayedPayment"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.DelayedPaymentNavClass(Context)">
+                    Payment Pending
+                </a>
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusApproved"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.ApprovedNavClass(Context)">
+                    Approved
+                </a>
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusInProcess"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.InProcessNavClass(Context)">
+                    In Process
+                </a>
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusShipped"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.ShippedNavClass(Context)">
+                    Completed
+                </a>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h4 class="m-0">
+                    <i class="fa-solid fa-table"></i> ORDERS
+                </h4>
+            </div>
+            <div class="card-body px-3 py-2">
+                <div class="datatable-area scroll-container overflow-auto">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td>@order.Id</td>
+                                    <td>@order.Name</td>
+                                    <td>@order.PhoneNumber</td>
+                                    <td>@order.ApplicationUser.Email</td>
+                                    <td>
+                                        <span class="
+                                            @(order.OrderStatus == OrderStatuses.StatusPending 
+                                                || order.OrderStatus == OrderStatuses.StatusApproved 
+                                                || order.OrderStatus == OrderStatuses.StatusInProcess ? "text-primary" : 
+                                                order.OrderStatus == OrderStatuses.StatusShipped ? "text-success" : 
+                                                "text-danger")">
+                                            @order.OrderStatus
+                                        </span>
+                                    </td>
+                                    <td>@order.OrderTotal.ToString("c")</td>
+                                    <td>
+                                        <a asp-action="Detail" asp-route-id="@order.Id" class="btn btn-primary py-1">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(() => {
+            // Data table
+            const datatablesSimple = document.getElementById('datatablesSimple');
+            if (datatablesSimple) {
+                new simpleDatatables.DataTable(datatablesSimple);
+            }
+        });
+    </script>
+}

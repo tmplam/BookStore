@@ -1,0 +1,113 @@
+﻿@model ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Order summary";
+}
+
+<main>
+    <div class="py-2 bg-body-secondary">
+        <div class="container">
+            <form class="card shadow border-0 my-3" method="POST">
+                <div class="card-header text-bg-dark py-3">
+                    <div class="row px-4 align-items-center">
+                        <div class="col-6 ps-0">
+                            <h4 class="pt-2 text-white text-uppercase">Order Summary</h4>
+                        </div>
+                        <div class="col-6 pe-0 text-end">
+                            <a asp-action="Index" class="btn btn-outline-danger btn-sm py-2">
+                                Back to Cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-4">
+                                <div class="row">
+                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-info">Delivery Details:</span>
+                                    </h4>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label asp-for="OrderHeader.Name" class="fw-semibold"></label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.Name" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label asp-for="OrderHeader.PhoneNumber" class="fw-semibold"></label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.PhoneNumber" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label asp-for="OrderHeader.Address" class="fw-semibold"></label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.Address" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-5 offset-lg-1">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-info">Order Summary:</span>
+                                </h4>
+                                <ul class="list-group mb-3">
+                                    @foreach (var shoppingCart in Model.ShoppingCarts)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <div class="flex-fill">
+                                                <h6 class="my-0 one-line-ellipsis"
+                                                    title="@shoppingCart.Product.Title">
+                                                    @shoppingCart.Product.Title
+                                                </h6>
+                                                <small class="text-muted">
+                                                    Quantity: @shoppingCart.Quantity
+                                                </small>
+                                            </div>
+                                            <span class="text-muted">
+                                                @((shoppingCart.Product.Price * shoppingCart.Quantity).ToString("c"))
+                                            </span>
+                                        </li>
+                                    }
+                                    <li class="list-group-item d-flex justify-content-between bg-light">
+                                        <span class="text-success">Total (USD)</span>
+                                        <strong class="text-success">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row p-1">
+                        <div class="col-12 col-md-8 col-lg-9 pt-2 mb-2">
+                            <p class="m-0 text-danger" style="font-size: 14px">
+                                (*) Estimate Arrival Date: <span id="from-time">@DateTime.Now.AddDays(7).ToShortDateString()</span>
+                                - <span id="to-time">@DateTime.Now.AddDays(14).ToShortDateString()</span>
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-4 col-lg-3">
+                            <button type="submit" class="btn btn-primary form-control">
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
