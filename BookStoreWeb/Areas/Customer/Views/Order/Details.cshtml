@@ -1,0 +1,206 @@
+﻿@model OrderVM
+
+@{
+    ViewData["Title"] = "Order details";
+}
+
+<main>
+    <div class="py-3">
+        <div class="container">
+            <div class="card shadow border-0">
+                <div class="card-header text-bg-dark py-3">
+                    <div class="row px-4 align-items-center">
+                        <div class="col-6 ps-0">
+                            <h4 class="pt-2 text-white text-uppercase">
+                                Order Summary
+                            </h4>
+                        </div>
+                        <div class="col-6 pe-0 text-end">
+                            <a asp-action="Index" class="btn btn-outline-danger btn-sm py-2 text-uppercase">
+                                Back to Orders
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <form class="card-body" method="post">
+                    <input asp-for="OrderHeader.Id" hidden />
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-4">
+                                <fieldset>
+                                    <div class="row">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Delivery Details:</span>
+                                        </h4>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.Name" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.Name" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.PhoneNumber" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.PhoneNumber" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.Address" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.Address" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.ApplicationUser.Email" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.ApplicationUser.Email" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.OrderDate" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.OrderDate" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.Carrier" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.Carrier" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.TrackingNumber" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.TrackingNumber" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.ShippingDate" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.ShippingDate" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.SessionId" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.SessionId" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.PaymentIntentId" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.PaymentIntentId" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                    @if (Model.OrderHeader.PaymentIntentId == null)
+                                    {
+                                        <div class="row my-1">
+                                            <div class="col-3">
+                                                <label asp-for="OrderHeader.PaymentDueDate" class="fw-semibold"></label>
+                                            </div>
+                                            <div class="col-9">
+                                                <input asp-for="OrderHeader.PaymentDueDate" disabled class="form-control" />
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="row my-1">
+                                            <div class="col-3">
+                                                <label asp-for="OrderHeader.PaymentDate" class="fw-semibold"></label>
+                                            </div>
+                                            <div class="col-9">
+                                                <input asp-for="OrderHeader.PaymentDate" disabled class="form-control" />
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label asp-for="OrderHeader.PaymentStatus" class="fw-semibold"></label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.PaymentStatus" disabled class="form-control" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-12 col-lg-5 offset-lg-1">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-info">Order Summary:</span>
+                                </h4>
+                                <button class="btn @(Model.OrderHeader.OrderStatus == OrderStatuses.Cancelled ? "btn-outline-danger" : "btn-outline-success") w-100 mb-2 text-uppercase">
+                                    ORDER STATUS - @Model.OrderHeader.OrderStatus
+                                </button>
+                                <ul class="list-group mb-3">
+                                    @foreach (var item in Model.OrderDetails)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <div class="flex-fill">
+                                                <h6 class="my-0 one-line-ellipsis" title="@item.Product.Title">
+                                                    @item.Product.Title
+                                                </h6>
+                                                <small class="text-muted d-block">
+                                                    Price: @item.Price.ToString("c")
+                                                </small>
+                                                <small class="text-muted d-block">
+                                                    Quantity: @item.Quantity
+                                                </small>
+                                            </div>
+                                            <span class="text-muted">
+                                                @((item.Price * item.Quantity).ToString("c"))
+                                            </span>
+                                        </li>
+                                    }
+
+                                    <li class="list-group-item d-flex justify-content-between align-items-center bg-light py-3">
+                                        <h4 class="text-success mb-0 text-uppercase">
+                                            Total
+                                        </h4>
+                                        <h4 class="text-success mb-0">
+                                            @Model.OrderHeader.OrderTotal.ToString("c")
+                                        </h4>
+                                    </li>
+                                </ul>
+
+                                @if (Model.OrderHeader.PaymentStatus == PaymentStatuses.DelayedPayment
+                                    && Model.OrderHeader.OrderStatus == OrderStatuses.Shipped)
+                                {
+                                    <button asp-action="PayNow" type="submit" class="btn btn-success w-100 fw-semibold text-uppercase">
+                                        Pay Now
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

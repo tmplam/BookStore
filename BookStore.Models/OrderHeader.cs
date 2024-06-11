@@ -32,6 +32,7 @@ namespace BookStore.Models
 
         [Phone]
         [Required]
+        [Display(Name = "Phone")]
         public string PhoneNumber { get; set; }
 
         [Required]

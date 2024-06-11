@@ -1,0 +1,27 @@
+﻿@model Guid
+
+@{
+    ViewData["Title"] = "Payment confirmation";
+}
+
+<main>
+    <div class="py-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1>Payment Successful!</h1>
+                    <h5 class="d-inline text-success">
+                        Your Order Code is:
+                        <span class="fw-light text-body">@Model.ToString()</span>
+                    </h5>
+                    <img class="my-2 w-75 shadow rounded-3" src="~/images/lawn_leaf.jpg" alt="Lawn leaf" />
+                    <div class="my-1">
+                        <a class=" btn btn-primary shadow" asp-area="Customer" asp-controller="Order" asp-action="Details" asp-route-orderId="@Model">
+                            Back to Order Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

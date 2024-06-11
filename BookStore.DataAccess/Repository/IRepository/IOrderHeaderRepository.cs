@@ -5,7 +5,7 @@ namespace BookStore.DataAccess.Repository.IRepository
     public interface IOrderHeaderRepository : IRepository<OrderHeader>
     {
         void Update(OrderHeader orderHeader);
-        Task UpdateStatus(Guid id, string orderStatus, string? paymentStatus = null);
-        Task UpdateStripePaymentID(Guid id, string sessionId, string paymentIntentId);
+        Task UpdateStatusAsync(Guid id, string orderStatus, string? paymentStatus = null);
+        Task UpdateStripePaymentIDAsync(Guid id, string sessionId, string paymentIntentId);
     }
 }

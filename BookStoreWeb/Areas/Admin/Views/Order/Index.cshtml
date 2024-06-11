@@ -1,5 +1,4 @@
-﻿@using BookStoreWeb.Areas.Admin.Views.Order;
-@model List<OrderHeader>
+﻿@model List<OrderHeader>
 
 @{
     ViewData["Title"] = "Manage orders";
@@ -10,25 +9,25 @@
     <div class="col-xl-12 col-md-12">
         <div class="mb-2 d-flex justify-content-end">
             <div class="btn-group shadow flex-wrap" role="group">
-                <a asp-controller="Order"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.AllNavClass(Context)">
-                    All
-                </a>
-                <a asp-controller="Order" asp-route-status="@PaymentStatuses.PaymentStatusDelayedPayment"
+                <a asp-controller="Order" asp-route-status="@PaymentStatuses.DelayedPayment"
                    class="btn btn-outline-primary @ManageOrderStatusNav.DelayedPaymentNavClass(Context)">
                     Payment Pending
                 </a>
-                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusApproved"
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.Approved"
                    class="btn btn-outline-primary @ManageOrderStatusNav.ApprovedNavClass(Context)">
                     Approved
                 </a>
-                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusInProcess"
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.InProcess"
                    class="btn btn-outline-primary @ManageOrderStatusNav.InProcessNavClass(Context)">
                     In Process
                 </a>
-                <a asp-controller="Order" asp-route-status="@OrderStatuses.StatusShipped"
+                <a asp-controller="Order" asp-route-status="@OrderStatuses.Shipped"
                    class="btn btn-outline-primary @ManageOrderStatusNav.ShippedNavClass(Context)">
                     Completed
+                </a>
+                <a asp-controller="Order"
+                   class="btn btn-outline-primary @ManageOrderStatusNav.AllNavClass(Context)">
+                    All
                 </a>
             </div>
         </div>
@@ -63,17 +62,17 @@
                                     <td>@order.ApplicationUser.Email</td>
                                     <td>
                                         <span class="
-                                            @(order.OrderStatus == OrderStatuses.StatusPending 
-                                                || order.OrderStatus == OrderStatuses.StatusApproved 
-                                                || order.OrderStatus == OrderStatuses.StatusInProcess ? "text-primary" : 
-                                                order.OrderStatus == OrderStatuses.StatusShipped ? "text-success" : 
+                                            @(order.OrderStatus == OrderStatuses.Pending 
+                                                || order.OrderStatus == OrderStatuses.Approved 
+                                                || order.OrderStatus == OrderStatuses.InProcess ? "text-primary" : 
+                                                order.OrderStatus == OrderStatuses.Shipped ? "text-success" : 
                                                 "text-danger")">
                                             @order.OrderStatus
                                         </span>
                                     </td>
                                     <td>@order.OrderTotal.ToString("c")</td>
                                     <td>
-                                        <a asp-action="Detail" asp-route-id="@order.Id" class="btn btn-primary py-1">
+                                        <a asp-action="Details" asp-route-orderId="@order.Id" class="btn btn-primary py-1">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </td>

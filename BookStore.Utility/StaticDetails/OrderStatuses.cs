@@ -2,11 +2,10 @@
 {
     public static class OrderStatuses
     {
-        public static string StatusPending => "Pending";
-        public static string StatusApproved => "Approved";
-        public static string StatusInProcess => "Processing";
-        public static string StatusShipped => "Shipped";
-        public static string StatusCancelled => "Cancelled";
-        public static string StatusRefunded => "Refunded";
+        public static string Pending => "Pending";
+        public static string Approved => "Approved";
+        public static string InProcess => "Processing";
+        public static string Shipped => "Shipped";
+        public static string Cancelled => "Cancelled";
     }
 }

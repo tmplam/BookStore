@@ -89,8 +89,6 @@ namespace BookStoreWeb.Areas.Customer.Controllers
 
             var applicationUser = await _unitOfWork.ApplicationUser.GetAsync(user => user.Id == userId);
 
-            //ShoppingCartVM.OrderHeader.ApplicationUser = applicationUser;
-
             foreach (var cart in ShoppingCartVM.ShoppingCarts)
             {
                 ShoppingCartVM.OrderHeader.OrderTotal += cart.Quantity * cart.Product.Price;
@@ -99,14 +97,14 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             if (applicationUser?.CompanyId == null)
             {
                 // Regular customer account and we need to capture payment
-                ShoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.StatusPending;
-                ShoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.PaymentStatusPending;
+                ShoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.Pending;
+                ShoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.Pending;
             }
             else
             {
                 // It is a company account
-                ShoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.StatusApproved;
-                ShoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.PaymentStatusDelayedPayment;
+                ShoppingCartVM.OrderHeader.OrderStatus = OrderStatuses.Approved;
+                ShoppingCartVM.OrderHeader.PaymentStatus = PaymentStatuses.DelayedPayment;
             }
 
             try
@@ -141,11 +139,11 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             if (applicationUser?.CompanyId == null)
             {
                 // Stripe logic payment for regular account
-                var domain = "https://localhost:44303";
+                var domain = Request.Scheme + "://" + Request.Host.Value;
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {
-                    SuccessUrl = $"{domain}/Customer/Cart/OrderConfirmation/{ShoppingCartVM.OrderHeader.Id}",
-                    CancelUrl = $"{domain}/Customer/Cart",
+                    SuccessUrl = $"{domain}/Customer/Cart/OrderConfirmation?orderId={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = $"{domain}/Customer/Cart/OrderConfirmation?orderId={ShoppingCartVM.OrderHeader.Id}",
                     LineItems = new List<Stripe.Checkout.SessionLineItemOptions>(),
                     Mode = "payment",
                 };
@@ -172,47 +170,77 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                 Stripe.Checkout.Session session = service.Create(options);
 
                 // Just have SessionId, PaymentId is null for now
-                // If customer click "back" SessionId will be null
-                await _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+
+                await _unitOfWork.CreateTransactionAsync();
+                await _unitOfWork.OrderHeader.UpdateStripePaymentIDAsync(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitAsync();
             
                 // Redirect to payment page
                 Response.Headers.Add("Location", session.Url);
 
                 return new StatusCodeResult(303);
             }
+            else
+            {
+                // A company account will place successfully, so clear the cart
+                await _unitOfWork.CreateTransactionAsync();
+                IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart =>
+                            shoppingCart.ApplicationUserId == userId);
+                _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitAsync();
+            }
 
-            return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
+            return RedirectToAction(nameof(OrderConfirmation), new { orderId = ShoppingCartVM.OrderHeader.Id });
         }
 
         [HttpGet]
-        public async Task<IActionResult> OrderConfirmation(Guid id)
+        public async Task<IActionResult> OrderConfirmation(Guid orderId)
         {
-            var orderHeader = await _unitOfWork.OrderHeader.GetAsync(orderHeader => orderHeader.Id == id,
+            var orderHeader = await _unitOfWork.OrderHeader.GetAsync(orderHeader => orderHeader.Id == orderId,
                 includeProperties: "ApplicationUser");
             
-            if (orderHeader.PaymentStatus != PaymentStatuses.PaymentStatusDelayedPayment
-                && orderHeader.PaymentStatus != PaymentStatuses.PaymentStatusApproved)
+            if (orderHeader != null)
             {
-                // Order by customer
-                var service = new Stripe.Checkout.SessionService();
-                Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
-
-                if (session.PaymentStatus.ToLower() == "paid")
+                if (orderHeader.PaymentStatus != PaymentStatuses.DelayedPayment
+                    && orderHeader.PaymentStatus != PaymentStatuses.Approved)
                 {
-                    await _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
-                    await _unitOfWork.OrderHeader.UpdateStatus(id, OrderStatuses.StatusApproved, PaymentStatuses.PaymentStatusApproved);
-                    await _unitOfWork.SaveChangesAsync();
+                    // Order by customer
+                    var service = new Stripe.Checkout.SessionService();
+                    Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
+
+                    await _unitOfWork.CreateTransactionAsync();
+                    if (session.PaymentStatus.ToLower() == "paid")
+                    {
+                        if (string.IsNullOrEmpty(orderHeader.PaymentIntentId))
+                        {
+                            // Update payment info
+                            await _unitOfWork.OrderHeader.UpdateStripePaymentIDAsync(orderId, session.Id, session.PaymentIntentId);
+                            await _unitOfWork.OrderHeader.UpdateStatusAsync(orderId, OrderStatuses.Approved, PaymentStatuses.Approved);
+                            // Remove shopping cart's items
+                            IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart =>
+                                shoppingCart.ApplicationUserId == orderHeader.ApplicationUserId);
+                            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                            await _unitOfWork.SaveChangesAsync();
+                            await _unitOfWork.CommitAsync();
+                        }
+                    }
+                    else
+                    {
+                        // Delete order if unpaid, ondelete cascade so orderDetails will be removeds
+                        _unitOfWork.OrderHeader.Remove(orderHeader);
+                        await _unitOfWork.SaveChangesAsync();
+                        await _unitOfWork.CommitAsync();
+                    }
+                }
+                else if (orderHeader.PaymentStatus == PaymentStatuses.DelayedPayment)
+                {
+                    return View(orderId);
                 }
             }
-
-            IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart => 
-                shoppingCart.ApplicationUserId == orderHeader.ApplicationUserId);
-
-            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
-            await _unitOfWork.SaveChangesAsync();
-
-            return View(id);
+            
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Plus(Guid productId)

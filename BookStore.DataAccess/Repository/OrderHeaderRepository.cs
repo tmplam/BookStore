@@ -19,7 +19,7 @@ namespace BookStore.DataAccess.Repository
             _dbContext.OrderHeaders.Update(orderHeader);
         }
 
-        public async Task UpdateStatus(Guid id, string orderStatus, string? paymentStatus = null)
+        public async Task UpdateStatusAsync(Guid id, string orderStatus, string? paymentStatus = null)
         {
             var orderFromDb = await _dbContext.OrderHeaders.FirstOrDefaultAsync(orderHeader => orderHeader.Id == id);
             if (orderFromDb != null)
@@ -33,7 +33,7 @@ namespace BookStore.DataAccess.Repository
             }
         }
 
-        public async Task UpdateStripePaymentID(Guid id, string sessionId, string paymentIntentId)
+        public async Task UpdateStripePaymentIDAsync(Guid id, string sessionId, string paymentIntentId)
         {
             var orderFromDb = await _dbContext.OrderHeaders.FirstOrDefaultAsync(orderHeader => orderHeader.Id == id);
 
