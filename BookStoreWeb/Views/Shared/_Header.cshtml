@@ -1,12 +1,4 @@
-﻿@{
-    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
-    var area = ViewContext.RouteData.Values["area"]?.ToString();
-    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
-    var action = ViewContext.RouteData.Values["action"]?.ToString();
-}
-
-
-<header class="p-3 border-bottom card border-0 rounded-0">
+﻿<header class="p-3 border-bottom card border-0 rounded-0">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center">
             <a href="/"
@@ -29,28 +21,12 @@
                     <a asp-area="Customer" asp-controller="Cart" asp-action="Index"
                        class="nav-link px-2 @ManageNavPages.CartNavClass(ViewContext) position-relative">
                         <i class="fa-solid fa-cart-shopping"></i>
-                        @* <% if(typeof numCartItem !== 'undefined' && numCartItem) { %>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            <%= numCartItem %>
-                        </span>
-                        <% } %> *@
+                        @await Component.InvokeAsync("ShoppingCart")
                     </a>
                 </li>
             </ul>
 
-            <div class="form-check form-switch mb-0 me-4">
-                <input class="form-check-input" type="checkbox" role="switch" id="darkMode" @(darkMode == ThemeSettings.DarkMode ? "checked" : "")/>
-                <label class="form-check-label" for="darkMode">
-                    @if (darkMode == ThemeSettings.DarkMode) 
-                    {
-                        <i id="dark-mode-icon" class="fa-solid fa-moon fa-lg"></i>
-                    }
-                    else 
-                    {
-                        <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
-                    }
-                </label>
-            </div>
+            @await Component.InvokeAsync("ToggleTheme")
 
             <partial name="_LoginPartial" />
         </div>

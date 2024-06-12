@@ -24,8 +24,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body pb-0">
-                    <div class="container" style="min-height: 360px">
+                <div class="card-body">
+                    <div class="container">
                         @if (Model.ShoppingCarts.Count() > 0) 
                         {
                             <div class="row justify-content-center">
@@ -75,7 +75,7 @@
                                                 </div>
 
                                                 <div class="col-2 text-end">
-                                                    <a asp-action="Eemove" asp-route-productId="@shoppingCart.ProductId" class="btn btn-danger py-2">
+                                                    <a asp-action="Remove" asp-route-productId="@shoppingCart.ProductId" class="btn btn-danger py-2">
                                                         <i class="fa-solid fa-trash-can"></i>
                                                     </a>
                                                 </div>
@@ -87,8 +87,7 @@
                         } 
                         else 
                         {
-                            <div style="min-height: 360px"
-                                 class="d-flex justify-content-center align-items-center">
+                            <div class="d-flex justify-content-center align-items-center">
                                 <h4 class="text-danger fst-italic mb-0">
                                     Your cart is empty now!
                                 </h4>

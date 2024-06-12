@@ -1,5 +1,5 @@
 ﻿@{
-    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSession.SessionKey) ?? ThemeSession.LightMode;
 }
 
 <header class="p-3 border-bottom card border-0 rounded-0">
@@ -13,19 +13,7 @@
                 <i class="fa-solid fa-bars"></i>
             </span>
 
-            <div class="form-check form-switch mb-0 me-4">
-                <input class="form-check-input" type="checkbox" role="switch" id="darkMode" @(darkMode == ThemeSettings.DarkMode ? "checked" : "") />
-                <label class="form-check-label" for="darkMode">
-                    @if (darkMode == ThemeSettings.DarkMode)
-                    {
-                        <i id="dark-mode-icon" class="fa-solid fa-moon fa-lg"></i>
-                    }
-                    else
-                    {
-                        <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
-                    }
-                </label>
-            </div>
+            @await Component.InvokeAsync("ToggleTheme")
 
             <partial name="_LoginPartial" />
         </div>

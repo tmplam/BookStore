@@ -1,0 +1,15 @@
+﻿@model string
+
+<div class="form-check form-switch mb-0 me-4">
+    <input class="form-check-input" type="checkbox" role="switch" id="darkMode" @(Model == ThemeSession.DarkMode ? "checked" : "") />
+    <label class="form-check-label" for="darkMode">
+        @if (Model == ThemeSession.DarkMode)
+        {
+            <i id="dark-mode-icon" class="fa-solid fa-moon fa-lg"></i>
+        }
+        else
+        {
+            <i id="dark-mode-icon" class="fa-solid fa-sun fa-lg"></i>
+        }
+    </label>
+</div>

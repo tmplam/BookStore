@@ -15,7 +15,7 @@ namespace BookStoreWeb.Controllers
         [HttpPost]
         public IActionResult ToggleDarkMode([FromBody] bool darkMode)
         {
-            HttpContext.Session.SetString(ThemeSettings.DarkModeSessionKey, darkMode ? ThemeSettings.DarkMode : ThemeSettings.LightMode);
+            HttpContext.Session.SetString(ThemeSession.SessionKey, darkMode ? ThemeSession.DarkMode : ThemeSession.LightMode);
             return Ok(new { success = true });
         }
 

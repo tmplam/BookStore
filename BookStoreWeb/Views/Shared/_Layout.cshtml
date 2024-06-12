@@ -1,5 +1,5 @@
 ﻿@{
-    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSettings.DarkModeSessionKey) ?? ThemeSettings.LightMode;
+    string darkMode = ViewContext.HttpContext.Session.GetString(ThemeSession.SessionKey) ?? ThemeSession.LightMode;
 }
 
 <!DOCTYPE html>

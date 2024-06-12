@@ -7,21 +7,14 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 
+#nullable disable
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages(); // Razor pages for identity page
-
-builder.Services.AddDistributedMemoryCache(); // Automatically remove cache when unused
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(100);
-    options.Cookie.HttpOnly = true; // Can't be accessed by JS
-    options.Cookie.IsEssential = true;
-});
-
 
 // Add database context and repository
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -30,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 // Inject Stripe Key to StripeSettings
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Payments:Stripe"));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -43,6 +36,22 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Identity/Account/Logout";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
+
+// Add external logins
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = builder.Configuration.GetSection("ExternalLogins:Facebook:AppId").Get<string>();
+    options.AppSecret = builder.Configuration.GetSection("ExternalLogins:Facebook:AppSecret").Get<string>();
+});
+
+builder.Services.AddDistributedMemoryCache(); // Automatically remove cache when unused
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true; // Can't be accessed by JS
+    options.Cookie.IsEssential = true;
+});
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
@@ -60,7 +69,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Payments:Stripe:SecretKey").Get<string>();
 
 app.UseRouting();
 app.UseAuthentication();

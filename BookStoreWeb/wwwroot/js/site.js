@@ -1,5 +1,4 @@
 ﻿// Handle darkmode
-
 $('#darkMode').change(async (e) => {
     const darkMode = $('#darkMode').is(':checked');
     const response = await fetch('/Settings/ToggleDarkMode', {

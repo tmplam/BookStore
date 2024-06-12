@@ -1,6 +1,7 @@
 ﻿using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using BookStore.Models.ViewModels;
+using BookStore.Utility.StaticDetails;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -19,6 +20,20 @@ namespace BookStoreWeb.Areas.Customer.Controllers
         {
             this.logger = logger;
             _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> LoadShoppingCart()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            var cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(cart =>
+                cart.ApplicationUserId == userId)).Count();
+            HttpContext.Session.SetInt32(ShoppingCartSession.SessionKey, cartCount);
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -83,16 +98,24 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             ShoppingCart cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(cart =>
                 cart.ApplicationUserId == userId && cart.ProductId == shoppingCart.ProductId);
 
+            await _unitOfWork.CreateTransactionAsync();
             if (cartFromDb != null) 
             {
                 cartFromDb.Quantity += shoppingCart.Quantity;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                await _unitOfWork.SaveChangesAsync();
             } 
             else
             {
                 await _unitOfWork.ShoppingCart.AddAsync(shoppingCart);
+                await _unitOfWork.SaveChangesAsync();
+
+                // Update shopping cart count session
+                var cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(cart =>
+                    cart.ApplicationUserId == userId)).Count();
+                HttpContext.Session.SetInt32(ShoppingCartSession.SessionKey, cartCount);
             }
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitAsync();
 
             TempData["successMessage"] = "Add to cart successfully";
 

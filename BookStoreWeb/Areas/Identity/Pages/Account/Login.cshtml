@@ -9,31 +9,33 @@
     <div class="container py-2">
         <div class="row justify-content-center align-items-center my-3">
             <div class="col-12 col-md-9 col-lg-6 col-xl-5">
-                <form id="account" method="post" class="text-body-emphasis p-4 rounded-4 shadow card">
+                <div class="text-body-emphasis p-4 rounded-4 shadow card">
                     <h1 class="text-center text-primary mb-2 text-uppercase">Login</h1>
 
-                    <div asp-validation-summary="ModelOnly" class="text-danger text-center my-2" role="alert"></div>
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-center my-2" role="alert"></div>
 
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                        <label asp-for="Input.Email" class="form-label">Email</label>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                        <label asp-for="Input.Password" class="form-label">Password</label>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    <div class="checkbox mb-2">
-                        <label asp-for="Input.RememberMe" class="form-label">
-                            <input class="form-check-input" asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(model => model.Input.RememberMe)
-                        </label>
-                    </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email" class="form-label">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password" class="form-label">Password</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="checkbox mb-2">
+                            <label asp-for="Input.RememberMe" class="form-label">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                @Html.DisplayNameFor(model => model.Input.RememberMe)
+                            </label>
+                        </div>
 
-                    <div class="mb-2">
-                        <button id="login-submit" type="submit" class="w-100 btn px-4 py-2 btn-primary">Login</button>
-                    </div>
+                        <div class="mb-2">
+                            <button id="login-submit" type="submit" class="w-100 btn px-4 py-2 btn-primary">Login</button>
+                        </div>
+                    </form>
   
                     <p class="text-center mb-0">
                         You don't have an account?
@@ -56,14 +58,47 @@
                            style="height: 1px; background-color: #eee"></p>
                     </div>
 
-                    <div class="d-flex justify-content-center mb-2">
-                        <a class="btn btn-danger px-4 py-2 col-12"
-                           href="/auth/google"
-                           role="button">
-                            <i class="fab fa-google me-2"></i>Continue with Google
-                        </a>
-                    </div>
-                </form>
+                    @{
+                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                        {
+                            <div>
+                                <p>
+                                    There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                        article about setting up this ASP.NET application to support logging in via external services
+                                    </a>.
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <div class="d-flex justify-content-center mb-2">
+                                        @if (provider.DisplayName!.Contains("facebook", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <button type="submit" class="btn btn-primary px-4 py-2 col-12" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                                <i class="fab fa-facebook me-2"></i> Continue with @provider.DisplayName
+                                            </button>
+                                        }
+                                        else if (provider.DisplayName.Contains("google", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <button type="submit" class="btn btn-danger px-4 py-2 col-12" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                                <i class="fab fa-google me-2"></i> Continue with @provider.DisplayName
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-dark px-4 py-2 col-12" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                                <i class="fas fa-right-to-bracket me-2"></i> Continue with @provider.DisplayName
+                                            </button>
+                                        }
+                                    </div>
+                                }
+                            </form>
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>

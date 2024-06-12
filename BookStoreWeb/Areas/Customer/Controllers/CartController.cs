@@ -188,6 +188,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                 IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart =>
                             shoppingCart.ApplicationUserId == userId);
                 _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                HttpContext.Session.Remove(ShoppingCartSession.SessionKey); // Clear shopping cart session
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();
             }
@@ -222,6 +223,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                             IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart =>
                                 shoppingCart.ApplicationUserId == orderHeader.ApplicationUserId);
                             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                            HttpContext.Session.Remove(ShoppingCartSession.SessionKey); // Clear shopping cart session
                             await _unitOfWork.SaveChangesAsync();
                             await _unitOfWork.CommitAsync();
                         }
@@ -276,6 +278,11 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                 {
                     // Remove item from cart
                     _unitOfWork.ShoppingCart.Remove(cartFromDb);
+
+                    // Update shopping cart count session
+                    var cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(cart =>
+                        cart.ApplicationUserId == userId)).Count();
+                    HttpContext.Session.SetInt32(ShoppingCartSession.SessionKey, cartCount - 1);
                 }
                 else
                 {
@@ -295,9 +302,16 @@ namespace BookStoreWeb.Areas.Customer.Controllers
 
             var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(shoppingCart =>
                     shoppingCart.ApplicationUserId == userId && shoppingCart.ProductId == productId);
+
             if (cartFromDb != null)
             {
                 _unitOfWork.ShoppingCart.Remove(cartFromDb);
+                
+                // Update shopping cart count session
+                var cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(cart =>
+                    cart.ApplicationUserId == userId)).Count();
+                HttpContext.Session.SetInt32(ShoppingCartSession.SessionKey, cartCount - 1);
+
                 await _unitOfWork.SaveChangesAsync();
             }
 
