@@ -197,8 +197,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RoleManagement(RoleManagementVM roleManagementVM)
         {
-            var user = await _unitOfWork.ApplicationUser.GetAsync(user => user.Id == roleManagementVM.ApplicationUser.Id, 
-                includeProperties: "Company");
+            var user = await _unitOfWork.ApplicationUser.GetAsync(user => user.Id == roleManagementVM.ApplicationUser.Id);
 
             if (user != null)
             {
@@ -248,6 +247,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
                     && roleManagementVM.ApplicationUser.CompanyId != null 
                     && user.CompanyId != roleManagementVM.ApplicationUser.CompanyId)
                 {
+                    user.Company = null;
                     user.CompanyId = roleManagementVM.ApplicationUser.CompanyId;
 
                     _unitOfWork.ApplicationUser.Update(user);

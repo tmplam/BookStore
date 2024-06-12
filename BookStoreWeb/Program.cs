@@ -38,11 +38,23 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Add external logins
-builder.Services.AddAuthentication().AddFacebook(options =>
-{
-    options.AppId = builder.Configuration.GetSection("ExternalLogins:Facebook:AppId").Get<string>();
-    options.AppSecret = builder.Configuration.GetSection("ExternalLogins:Facebook:AppSecret").Get<string>();
-});
+builder.Services.AddAuthentication()
+    .AddFacebook(options =>
+    {
+        options.AppId = builder.Configuration.GetSection("Authentication:Facebook:AppId").Get<string>();
+        options.AppSecret = builder.Configuration.GetSection("Authentication:Facebook:AppSecret").Get<string>();
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration.GetSection("Authentication:Google:ClientId").Get<string>();
+        options.ClientSecret = builder.Configuration.GetSection("Authentication:Google:ClientSecret").Get<string>();
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId = builder.Configuration.GetSection("Authentication:Microsoft:ClientId").Get<string>();
+        options.ClientSecret = builder.Configuration.GetSection("Authentication:Microsoft:ClientSecret").Get<string>();
+    });
+
 
 builder.Services.AddDistributedMemoryCache(); // Automatically remove cache when unused
 builder.Services.AddSession(options =>
