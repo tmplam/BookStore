@@ -23,20 +23,6 @@ namespace BookStoreWeb.Areas.Customer.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> LoadShoppingCart()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity!.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
-            var cartCount = (await _unitOfWork.ShoppingCart.GetAllAsync(cart =>
-                cart.ApplicationUserId == userId)).Count();
-            HttpContext.Session.SetInt32(ShoppingCartSession.SessionKey, cartCount);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Index(string keyword = "", string? genre = null, int page = 1, int perPage = 8)
         {
             IEnumerable<Product> products = await _unitOfWork.Product.GetAllAsync(product => 
