@@ -29,25 +29,33 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity) User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            IEnumerable<OrderHeader> orderHeaders;
+            OrderListVM orderListVM = new OrderListVM
+            {
+                PaymentPendingCount = await _unitOfWork.OrderHeader.CountAsync(order => 
+                    order.PaymentStatus == PaymentStatuses.DelayedPayment && order.ApplicationUserId == userId),
+                ApprovedCount = await _unitOfWork.OrderHeader.CountAsync(order => 
+                    order.OrderStatus == OrderStatuses.Approved && order.ApplicationUserId == userId),
+                InProcessCount = await _unitOfWork.OrderHeader.CountAsync(order => 
+                    order.OrderStatus == OrderStatuses.InProcess && order.ApplicationUserId == userId),
+            };
 
             if (string.IsNullOrEmpty(status))
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order => order.ApplicationUserId == userId, includeProperties: "ApplicationUser");
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order => order.ApplicationUserId == userId, includeProperties: "ApplicationUser");
             }
             else if (string.Equals(PaymentStatuses.DelayedPayment, status, StringComparison.OrdinalIgnoreCase))
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
-                    order.PaymentStatus.ToLower() == status.ToLower() && order.ApplicationUserId == userId, 
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
+                    order.PaymentStatus.ToLower() == status.ToLower() && order.ApplicationUserId == userId,     
                     includeProperties: "ApplicationUser");
             }
             else
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
                     order.OrderStatus.ToLower() == status.ToLower() && order.ApplicationUserId == userId, 
                     includeProperties: "ApplicationUser");
             }
-            return View(orderHeaders);
+            return View(orderListVM);
         }
 
         public async Task<IActionResult> Details(Guid orderId)

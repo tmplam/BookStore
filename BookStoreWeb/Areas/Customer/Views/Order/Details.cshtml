@@ -150,7 +150,7 @@
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-info">Order Summary:</span>
                                 </h4>
-                                <button class="btn @(Model.OrderHeader.OrderStatus == OrderStatuses.Cancelled ? "btn-outline-danger" : "btn-outline-success") w-100 mb-2 text-uppercase">
+                                <button onclick="return false;" class="btn @(Model.OrderHeader.OrderStatus == OrderStatuses.Cancelled ? "btn-outline-danger" : "btn-outline-success") w-100 mb-2 text-uppercase">
                                     ORDER STATUS - @Model.OrderHeader.OrderStatus
                                 </button>
                                 <ul class="list-group mb-3">

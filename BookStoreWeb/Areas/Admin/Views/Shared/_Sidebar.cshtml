@@ -23,7 +23,7 @@
             </a>
         </li>
         <li>
-            <a asp-area="Admin" asp-controller="Order" asp-action="Index"
+            <a asp-area="Admin" asp-controller="Order" asp-action="Index" asp-route-status="@OrderStatuses.Approved"
                class="nav-link @ManageOrderNav.OrderNavClass(ViewContext) text-nowrap">
                 <span class="me-2"><i class="fa-solid fa-table"></i></span>
                 Orders

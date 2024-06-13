@@ -14,8 +14,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a asp-area="Customer" asp-controller="Order" asp-action="Index"
-                       class="nav-link px-2 @ManageNavPages.OrderNavClass(ViewContext)">Order</a>
+                    @if (User.IsInRole(ApplicationRoles.Company))
+                    {
+                        <a asp-area="Customer" asp-controller="Order" asp-action="Index" asp-route-status="@PaymentStatuses.DelayedPayment"
+                        class="nav-link px-2 @ManageNavPages.OrderNavClass(ViewContext)">Order</a>
+                    }
+                    else
+                    {
+                        <a asp-area="Customer" asp-controller="Order" asp-action="Index" asp-route-status="@OrderStatuses.Approved"
+                           class="nav-link px-2 @ManageNavPages.OrderNavClass(ViewContext)">Order</a>
+                    }
                 </li>
                 <li class="nav-item">
                     <a asp-area="Customer" asp-controller="Cart" asp-action="Index"

@@ -1,0 +1,239 @@
+﻿@model DashboardVM
+
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["ActivePage"] = ManageOrderNav.Dashboard;
+}
+
+<div class="bg-body-secondary">
+    <!-- Change the content of page here -->
+    <div class="row g-3">
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 border-start border-5 border-primary shadow py-2 opacity-75">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col pe-0">
+                            <div style="font-size: 14px"
+                                    class="fw-semibold text-primary text-uppercase mb-1 text-nowrap">
+                                Orders (This month)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                @Model.MonthOrder
+                            </div>
+                        </div>
+                        <div class="col-auto opacity-25">
+                            <i class="fas fa-clipboard-list fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 border-start border-5 border-success shadow py-2 opacity-75">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col pe-0">
+                            <div style="font-size: 14px"
+                                    class="fw-semibold text-success text-uppercase mb-1 text-nowrap">
+                                Earnings (This year)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                @Model.YearEarning.ToString("c")
+                            </div>
+                        </div>
+                        <div class="col-auto opacity-25">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-6">
+            <div class="card border-0 border-start border-5 border-warning shadow py-2 opacity-75">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col pe-0">
+                            <div style="font-size: 14px"
+                                    class="fw-semibold text-warning text-uppercase mb-1 text-nowrap">
+                                Earnings (This Month)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold">
+                                @Model.MonthEarning.ToString("c")
+                            </div>
+                        </div>
+                        <div class="col-auto opacity-25">
+                            <i class="fas fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 my-3">
+        <div class="col-xl-6 col-md-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h5 class="m-0 font-weight-bold text-primary">
+                        <i class="fa-solid fa-chart-line"></i> Month Earnings Overview
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-area">
+                        <canvas class="w-100" id="months-sale-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-md-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h5 class="m-0 font-weight-bold text-primary">
+                        <i class="fa-solid fa-chart-simple"></i> Year Earnings Overview
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-area">
+                        <canvas class="w-100" id="years-sale-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-xl-12 col-md-12">
+            <div class="card shadow">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h5 class="m-0 font-weight-bold">
+                        <i class="fa-solid fa-table"></i> Month Best Sellings
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div>
+                        <table class="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Units sold</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                @for (int i = 0; i < Model.BestSellings.Count(); i++)
+                                {
+                                    var bestSelling = Model.BestSellings.ElementAt(i);
+                                    <tr>
+                                        <th scope="row">@(i + 1)</th>
+                                        <td>@bestSelling.Product.Title</td>
+                                        <td>@bestSelling.Product.Author</td>
+                                        <td>@bestSelling.UnitsSold</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts 
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        $(() => {
+            // Draw line chart
+            const monthSalesData = {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [{
+                    label: 'Earning',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@Model.MonthsEarning)),
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            };
+
+            const monthSalesConfig = {
+                type: 'line',
+                data: monthSalesData,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                        }
+                    }
+                }
+            };
+
+            new Chart(document.getElementById('months-sale-chart'), monthSalesConfig);
+
+            // Draw column chart
+            const yearSalesData = {
+                labels: [2020, 2021, 2022, 2023, 2024],
+                datasets: [{
+                    label: 'Earning',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@Model.YearsEarning)),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const yearSalesConfig = {
+                type: 'bar',
+                data: yearSalesData,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                            },
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+            };
+
+            new Chart(document.getElementById('years-sale-chart'), yearSalesConfig);
+        });
+    </script>
+}

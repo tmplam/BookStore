@@ -25,23 +25,31 @@ namespace BookStoreWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(string? status)
         {
-            IEnumerable<OrderHeader> orderHeaders;
+            OrderListVM orderListVM = new OrderListVM
+            {
+                PaymentPendingCount = await _unitOfWork.OrderHeader.CountAsync(order =>
+                    order.PaymentStatus == PaymentStatuses.DelayedPayment),
+                ApprovedCount = await _unitOfWork.OrderHeader.CountAsync(order =>
+                    order.OrderStatus == OrderStatuses.Approved),
+                InProcessCount = await _unitOfWork.OrderHeader.CountAsync(order =>
+                    order.OrderStatus == OrderStatuses.InProcess),
+            };
 
             if (string.IsNullOrEmpty(status))
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(includeProperties: "ApplicationUser");
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(includeProperties: "ApplicationUser");
             }
             else if (string.Equals(PaymentStatuses.DelayedPayment , status, StringComparison.OrdinalIgnoreCase))
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
                     order.PaymentStatus.ToLower() == status.ToLower(), includeProperties: "ApplicationUser");
             }
             else
             {
-                orderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
+                orderListVM.OrderHeaders = await _unitOfWork.OrderHeader.GetAllAsync(order =>
                     order.OrderStatus.ToLower() == status.ToLower(), includeProperties: "ApplicationUser");
             }
-            return View(orderHeaders);
+            return View(orderListVM);
         }
 
         public async Task<IActionResult> Details(Guid orderId)

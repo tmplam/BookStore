@@ -1,4 +1,4 @@
-﻿@model List<OrderHeader>
+﻿@model OrderListVM
 
 @{
     ViewData["Title"] = "Manage orders";
@@ -7,26 +7,44 @@
 
 <div class="row g-3">
     <div class="col-xl-12 col-md-12">
-        <div class="mb-2 d-flex justify-content-end">
-            <div class="btn-group shadow flex-wrap" role="group">
+        <div class="d-flex justify-content-end">
+            <div class="flex-wrap" role="group">
                 <a asp-controller="Order" asp-route-status="@PaymentStatuses.DelayedPayment"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.DelayedPaymentNavClass(Context)">
+                   class="btn btn-outline-primary position-relative me-2 mb-2 @ManageOrderStatusNav.DelayedPaymentNavClass(Context)">
                     Payment Pending
+                    @if (Model.PaymentPendingCount > 0)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Model.PaymentPendingCount
+                        </span>
+                    }
                 </a>
                 <a asp-controller="Order" asp-route-status="@OrderStatuses.Approved"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.ApprovedNavClass(Context)">
+                   class="btn btn-outline-primary position-relative me-2 mb-2 @ManageOrderStatusNav.ApprovedNavClass(Context)">
                     Approved
+                    @if (Model.ApprovedCount > 0)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Model.ApprovedCount
+                        </span>
+                    }
                 </a>
                 <a asp-controller="Order" asp-route-status="@OrderStatuses.InProcess"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.InProcessNavClass(Context)">
+                   class="btn btn-outline-primary position-relative me-2 mb-2 @ManageOrderStatusNav.InProcessNavClass(Context)">
                     In Process
+                    @if (Model.InProcessCount > 0)
+                    {
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Model.InProcessCount
+                        </span>
+                    }
                 </a>
                 <a asp-controller="Order" asp-route-status="@OrderStatuses.Shipped"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.ShippedNavClass(Context)">
+                   class="btn btn-outline-primary position-relative me-2 mb-2 @ManageOrderStatusNav.ShippedNavClass(Context)">
                     Completed
                 </a>
                 <a asp-controller="Order"
-                   class="btn btn-outline-primary @ManageOrderStatusNav.AllNavClass(Context)">
+                   class="btn btn-outline-primary mb-2 @ManageOrderStatusNav.AllNavClass(Context)">
                     All
                 </a>
             </div>
@@ -53,7 +71,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var order in Model)
+                            @foreach (var order in Model.OrderHeaders)
                             {
                                 <tr>
                                     <td>@order.Id</td>

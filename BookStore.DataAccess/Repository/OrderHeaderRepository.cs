@@ -2,6 +2,7 @@
 using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BookStore.DataAccess.Repository
 {
@@ -50,6 +51,36 @@ namespace BookStore.DataAccess.Repository
                     orderFromDb.PaymentDate = DateTime.Now;
                 }
             }
+        }
+
+        public async Task<int> CountAsync(Expression<Func<OrderHeader, bool>>? filter = null)
+        {
+            int totalOrders = 0;
+
+            if (filter != null)
+            {
+                totalOrders = await _dbContext.OrderHeaders.CountAsync(filter);
+            }
+            else
+            {
+                totalOrders = await _dbContext.OrderHeaders.CountAsync();
+            }
+            return totalOrders;
+        }
+
+        public async Task<double> SumOrderTotalAsync(Expression<Func<OrderHeader, bool>>? filter = null)
+        {
+            double sum = 0;
+
+            if (filter != null)
+            {
+                sum = await _dbContext.OrderHeaders.Where(filter).SumAsync(order => order.OrderTotal);
+            }
+            else
+            {
+                sum = await _dbContext.OrderHeaders.SumAsync(order => order.OrderTotal);
+            }
+            return sum;
         }
     }
 }
