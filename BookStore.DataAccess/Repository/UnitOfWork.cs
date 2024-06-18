@@ -1,6 +1,7 @@
 ﻿using BookStore.DataAccess.Data;
 using BookStore.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 #nullable disable
 
@@ -34,7 +35,7 @@ namespace BookStore.DataAccess.Repository
             ApplicationUser = new ApplicationUserRepository(dbContext);
         }
 
-        public async Task CreateTransactionAsync()
+        public async Task BeginTransactionAsync()
         {
             _transaction = await _dbContext.Database.BeginTransactionAsync();
         }

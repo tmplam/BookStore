@@ -110,7 +110,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             try
             {
                 // Handle create order and order details
-                await _unitOfWork.CreateTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
 
                 ShoppingCartVM.OrderHeader.OrderDetails = new Collection<OrderDetail>();
 
@@ -171,7 +171,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
 
                 // Just have SessionId, PaymentId is null for now
 
-                await _unitOfWork.CreateTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
                 await _unitOfWork.OrderHeader.UpdateStripePaymentIDAsync(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();
@@ -184,7 +184,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             else
             {
                 // A company account will place successfully, so clear the cart
-                await _unitOfWork.CreateTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
                 IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.GetAllAsync(shoppingCart =>
                             shoppingCart.ApplicationUserId == userId);
                 _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
@@ -211,7 +211,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                     var service = new Stripe.Checkout.SessionService();
                     Stripe.Checkout.Session session = service.Get(orderHeader.SessionId);
 
-                    await _unitOfWork.CreateTransactionAsync();
+                    await _unitOfWork.BeginTransactionAsync();
                     if (session.PaymentStatus.ToLower() == "paid")
                     {
                         if (string.IsNullOrEmpty(orderHeader.PaymentIntentId))

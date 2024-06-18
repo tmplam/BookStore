@@ -53,21 +53,6 @@ namespace BookStore.DataAccess.Repository
             }
         }
 
-        public async Task<int> CountAsync(Expression<Func<OrderHeader, bool>>? filter = null)
-        {
-            int totalOrders = 0;
-
-            if (filter != null)
-            {
-                totalOrders = await _dbContext.OrderHeaders.CountAsync(filter);
-            }
-            else
-            {
-                totalOrders = await _dbContext.OrderHeaders.CountAsync();
-            }
-            return totalOrders;
-        }
-
         public async Task<double> SumOrderTotalAsync(Expression<Func<OrderHeader, bool>>? filter = null)
         {
             double sum = 0;

@@ -9,7 +9,6 @@ namespace BookStore.DataAccess.Repository.IRepository
         Task UpdateStatusAsync(Guid id, string orderStatus, string? paymentStatus = null);
         Task UpdateStripePaymentIDAsync(Guid id, string sessionId, string paymentIntentId);
 
-        Task<int> CountAsync(Expression<Func<OrderHeader, bool>>? filter = null);
         Task<double> SumOrderTotalAsync(Expression<Func<OrderHeader, bool>>? filter = null);
     }
 }

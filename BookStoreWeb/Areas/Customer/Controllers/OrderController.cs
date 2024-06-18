@@ -125,7 +125,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             Stripe.Checkout.Session session = service.Create(options);
 
             // Just have SessionId, PaymentId is null for now
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
             await _unitOfWork.OrderHeader.UpdateStripePaymentIDAsync(OrderVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitAsync();
@@ -152,7 +152,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
 
                 if (string.IsNullOrEmpty(orderHeader.PaymentIntentId) && session.PaymentStatus.ToLower() == "paid")
                 {
-                    await _unitOfWork.CreateTransactionAsync();
+                    await _unitOfWork.BeginTransactionAsync();
 
                     await _unitOfWork.OrderHeader.UpdateStripePaymentIDAsync(orderId, session.Id, session.PaymentIntentId);
                     await _unitOfWork.OrderHeader.UpdateStatusAsync(orderId, orderHeader.OrderStatus, PaymentStatuses.Approved);

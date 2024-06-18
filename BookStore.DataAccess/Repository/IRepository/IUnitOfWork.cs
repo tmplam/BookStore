@@ -10,7 +10,7 @@
         public IOrderDetailRepository OrderDetail { get; }
         public IAppliccationRepository ApplicationUser { get; }
 
-        Task CreateTransactionAsync();
+        Task BeginTransactionAsync();
         Task CommitAsync();
         Task RollbackAsync();
         Task SaveChangesAsync();

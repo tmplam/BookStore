@@ -75,7 +75,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
 
                 if (existingCompany != null) 
                 {
-                    await unitOfWork.CreateTransactionAsync();
+                    await unitOfWork.BeginTransactionAsync();
 
                     unitOfWork.Company.Update(company);
                     await unitOfWork.SaveChangesAsync();
@@ -110,7 +110,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
             }
             else
             {
-                await unitOfWork.CreateTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
 
                 unitOfWork.Company.Remove(companyToBeDeleted);
                 await unitOfWork.SaveChangesAsync();

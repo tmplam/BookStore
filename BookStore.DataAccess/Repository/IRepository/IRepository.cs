@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using BookStore.Models;
+using System.Linq.Expressions;
 
 namespace BookStore.DataAccess.Repository.IRepository
 {
@@ -10,5 +11,7 @@ namespace BookStore.DataAccess.Repository.IRepository
         Task AddAsync(T entity);
         void Remove(T entity);
         void RemoveRange(IEnumerable<T> entities);
+
+        Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
     }
 }

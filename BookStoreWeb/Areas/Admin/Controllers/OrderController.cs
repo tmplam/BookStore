@@ -82,7 +82,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
                 orderHeaderFromDB.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             }
 
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
 
             _unitOfWork.OrderHeader.Update(orderHeaderFromDB);
             await _unitOfWork.SaveChangesAsync();
@@ -97,7 +97,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> StartProcessing()
         {
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
 
             await _unitOfWork.OrderHeader.UpdateStatusAsync(OrderVM.OrderHeader.Id, OrderStatuses.InProcess);
             await _unitOfWork.SaveChangesAsync();
@@ -122,7 +122,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
                 orderHeaderFromDB.PaymentDueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
             }
 
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
 
             _unitOfWork.OrderHeader.Update(orderHeaderFromDB);
             await _unitOfWork.SaveChangesAsync();
@@ -138,7 +138,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             var orderHeaderFromDB = await _unitOfWork.OrderHeader.GetAsync(order => order.Id == OrderVM.OrderHeader.Id);
 
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
 
             if (orderHeaderFromDB.PaymentStatus == PaymentStatuses.Approved)
             {

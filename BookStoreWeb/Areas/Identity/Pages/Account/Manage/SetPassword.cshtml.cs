@@ -5,12 +5,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BookStoreWeb.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class SetPasswordModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;

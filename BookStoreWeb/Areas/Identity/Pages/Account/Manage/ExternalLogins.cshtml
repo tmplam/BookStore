@@ -14,15 +14,49 @@
             @foreach (var login in Model.CurrentLogins)
             {
                 <tr>
-                    <td id="@($"login-provider-{login.LoginProvider}")">@login.ProviderDisplayName</td>
-                    <td>
+                    @if (login.ProviderDisplayName!.Contains("facebook", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <td class="align-middle text-center" id="@($"login-provider-{login.LoginProvider}")">
+                            <button class="btn btn-outline-primary px-4" style="cursor: default;" type="button">
+                                <i class="fab fa-facebook me-2"></i> @login.ProviderDisplayName
+                            </button>
+                        </td>
+                    }
+                    else if (login.ProviderDisplayName!.Contains("google", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <td class="align-middle text-center" id="@($"login-provider-{login.LoginProvider}")">
+                            <button class="btn btn-outline-danger px-4" style="cursor: default;" type="button">
+                                <i class="fab fa-google me-2"></i> @login.ProviderDisplayName
+                            </button>
+                        </td>
+                    }
+                    else if (login.ProviderDisplayName!.Contains("microsoft", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <td class="align-middle text-center" id="@($"login-provider-{login.LoginProvider}")">
+                            <button class="btn btn-outline-info px-4" style="cursor: default;" type="button">
+                                <i class="fab fa-microsoft me-2"></i> @login.ProviderDisplayName
+                            </button>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="align-middle text-center" id="@($"login-provider-{login.LoginProvider}")">
+                            <button class="btn btn-outline-warning px-4" style="cursor: default;" type="button">
+                                <i class="fas fa-right-to-bracket me-2"></i> @login.ProviderDisplayName
+                            </button>
+                        </td>
+                    }
+                    <td class="text-center">
                         @if (Model.ShowRemoveButton)
                         {
                             <form id="@($"remove-login-{login.LoginProvider}")" asp-page-handler="RemoveLogin" method="post">
                                 <div>
                                     <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
                                     <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
-                                    <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                                    <button type="submit" class="btn btn-danger" 
+                                            title="Remove this @login.ProviderDisplayName login from your account">
+                                        Remove
+                                    </button>
                                 </div>
                             </form>
                         }
@@ -36,16 +70,48 @@
         </tbody>
     </table>
 }
+
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
+    <h4>Add another service to log in</h4>
     <hr />
     <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
         <div id="socialLoginList">
             <p>
                 @foreach (var provider in Model.OtherLogins)
                 {
-                    <button id="@($"link-login-button-{provider.Name}")" type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    @if (provider.DisplayName!.Contains("facebook", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <button id="@($"link-login-button-{provider.Name}")" type="submit"
+                                class="btn btn-primary px-4 py-2" name="provider" value="@provider.Name"
+                                title="Log in using your @provider.DisplayName account">
+                            <i class="fab fa-facebook me-2"></i> @provider.DisplayName
+                        </button>
+                    }
+                    else if (provider.DisplayName!.Contains("google", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <button id="@($"link-login-button-{provider.Name}")" type="submit"
+                                class="btn btn-danger px-4 py-2" name="provider" value="@provider.Name"
+                                title="Log in using your @provider.DisplayName account">
+                            <i class="fab fa-google me-2"></i> @provider.DisplayName
+                        </button>
+                    }
+                    else if (provider.DisplayName!.Contains("microsoft", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <button id="@($"link-login-button-{provider.Name}")" type="submit"
+                                class="btn btn-info px-4 py-2" name="provider" value="@provider.Name"
+                                title="Log in using your @provider.DisplayName account">
+                            <i class="fab fa-microsoft me-2"></i> @provider.DisplayName
+                        </button>
+                    }
+                    else
+                    {
+                        <button id="@($"link-login-button-{provider.Name}")" type="submit"
+                                class="btn btn-warning px-4 py-2" name="provider" value="@provider.Name"
+                                title="Log in using your @provider.DisplayName account">
+                            <i class="fas fa-right-to-bracket me-2"></i> @provider.DisplayName
+                        </button>
+                    }
                 }
             </p>
         </div>

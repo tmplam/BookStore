@@ -30,9 +30,9 @@ namespace BookStoreWeb.Areas.Customer.Controllers
                     && (genre == null || genre == "all" || genre.ToLower().Equals(product.GenreId.ToString().ToLower())), 
                 includeProperties: "Genre", page: page, perPage: perPage);
 
-            int total = (await _unitOfWork.Product.GetAllAsync(product =>
+            int total = await _unitOfWork.Product.CountAsync(product =>
                 product.Title.ToLower().Contains(keyword.ToLower()) 
-                && (genre == null || genre == "all" || genre.ToLower().Equals(product.GenreId.ToString().ToLower())))).Count();
+                && (genre == null || genre == "all" || genre.ToLower().Equals(product.GenreId.ToString().ToLower())));
 
             IEnumerable<Genre> genres = await _unitOfWork.Genre.GetAllAsync();
 
@@ -84,7 +84,7 @@ namespace BookStoreWeb.Areas.Customer.Controllers
             ShoppingCart cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(cart =>
                 cart.ApplicationUserId == userId && cart.ProductId == shoppingCart.ProductId);
 
-            await _unitOfWork.CreateTransactionAsync();
+            await _unitOfWork.BeginTransactionAsync();
             if (cartFromDb != null) 
             {
                 cartFromDb.Quantity += shoppingCart.Quantity;

@@ -1,5 +1,6 @@
 ﻿using BookStore.DataAccess.Data;
 using BookStore.DataAccess.Repository.IRepository;
+using BookStore.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -80,6 +81,21 @@ namespace BookStore.DataAccess.Repository
         public void RemoveRange(IEnumerable<T> entities)
         {
             dbSet.RemoveRange(entities);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            int count = 0;
+
+            if (filter != null)
+            {
+                count = await dbSet.CountAsync(filter);
+            }
+            else
+            {
+                count = await dbSet.CountAsync();
+            }
+            return count;
         }
     }
 }

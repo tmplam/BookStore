@@ -49,7 +49,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await unitOfWork.CreateTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
 
                 await unitOfWork.Product.AddAsync(productVM.Product);
                 await unitOfWork.SaveChangesAsync();
@@ -133,7 +133,7 @@ namespace BookStoreWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await unitOfWork.CreateTransactionAsync();
+                await unitOfWork.BeginTransactionAsync();
 
                 var existingProduct = await unitOfWork.Product.GetAsync(product => product.Id == productVM.Product.Id);
 
